@@ -18,7 +18,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     public static synchronized MySQLiteOpenHelper getInstance(Context context) {
         if (helper == null) {
-            helper = new MySQLiteOpenHelper(context, TableConfig.Note.NOTE_TABLE_NAME);
+            helper = new MySQLiteOpenHelper(context, TableConfig.News.NEWS_TABLE_NAME);
         }
         return helper;
     }
@@ -31,16 +31,11 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table if not exists " + TableConfig.Note.NOTE_TABLE_NAME + '('
-                + TableConfig.Note.NOTE_ID + " integer not null primary key autoincrement,"
-                + TableConfig.Note.NOTE_TITLE + " verchar(50),"
-                + TableConfig.Note.NOTE_CONTENT + ' ' + TEXT_FIELD + ','
-                + TableConfig.Note.NOTE_START_TIME + ' ' + TEXT_FIELD + ','
-                + TableConfig.Note.NOTE_MODIFY_TIME + ' ' + TEXT_FIELD + ','
-                + TableConfig.Note.NOTE_TAG + ' ' + TEXT_FIELD + ','
-                + TableConfig.Note.NOTE_GROUP + ' ' + TEXT_FIELD + ')');
-        sqLiteDatabase.execSQL("create table if not exists " + TableConfig.Group.GROUP_TABLE_NAME + '('
-                + TableConfig.Group.GROUP_NAME + ' ' + TEXT_FIELD + ')');
+        sqLiteDatabase.execSQL("create table if not exists " + TableConfig.News.NEWS_TABLE_NAME + '('
+                + TableConfig.News.NEWS_ID + " integer not null primary key autoincrement,"
+                + TableConfig.News.NEWS_TITLE + " verchar(50),"
+                + TableConfig.News.NEWS_CONTENT + ' ' + TEXT_FIELD + ','
+                + TableConfig.News.NEWS_TIME + ' ' + TEXT_FIELD + ')');
     }
 
     /**
@@ -54,7 +49,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         // Work well in early development
-        sqLiteDatabase.execSQL("drop table if exists " + TableConfig.Note.NOTE_TABLE_NAME);
+        sqLiteDatabase.execSQL("drop table if exists " + TableConfig.News.NEWS_TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }
