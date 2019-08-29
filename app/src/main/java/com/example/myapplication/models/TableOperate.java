@@ -1,9 +1,10 @@
 package com.example.myapplication.models;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
-
+import java.util.ArrayList;
 
 public class TableOperate {
     private SQLiteDatabase db;
@@ -25,6 +26,16 @@ public class TableOperate {
         DBManager manager = DBManager.newInstances(context);
         db = manager.getDataBase();
     }
-
-
+/*
+    News getNoteAt(int index) {
+        ArrayList<News> noteList = new ArrayList<>();
+        Cursor c = db.rawQuery();
+        while (c.moveToNext()) {
+            News temp = new News(c.getString(1), stringToContent(c.getString(2)), c.getInt(0), c.getString(3), c.getString(4), stringToTagList(c.getString(5)), c.getString(6));
+            noteList.add(temp);
+        }
+        c.close();
+        return noteList.get(0);
+    }
+ */
 }

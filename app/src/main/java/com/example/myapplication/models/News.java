@@ -37,4 +37,24 @@ public class News {
     public String getTitle() {
         return title;
     }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setDBindex(int DBindex) {
+        this.DBindex = DBindex;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public void setIsfavorite(boolean isfavorite) {
+        this.isfavorite = isfavorite;
+    }
 }
