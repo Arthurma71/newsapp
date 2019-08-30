@@ -1,22 +1,40 @@
 package com.example.panjunchen.models;
 
+import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-class HttpConnect
-{
-    HttpConnect()
+class HttpThread extends Thread {
+    ArrayList<News> ans;
+    Integer pageSize;
+    Integer total;
+    int count;
+    String category;
+    HttpThread(ArrayList<News> ans,Integer pageSize,Integer total,int count,String category)
+    {
+        this.ans = ans;
+        this.pageSize = pageSize;
+        this.total = total;
+        this.category = category;
+        this.count = count;
+    }
+    public void run()
     {
         StringBuilder sbx = new StringBuilder();
         try{
-            String a = "https://api2.newsminer.net/svc/news/queryNewsList";
+            String a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+count+"&categories="+category;
             URL url = new URL(a);
             URLConnection httpUrl = url.openConnection();
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(),"utf-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = br.readLine()) != null) {
                 sbx.append(line);
@@ -24,27 +42,50 @@ class HttpConnect
         }
         catch(Exception e)
         {
-
+            e.printStackTrace();
+            Log.d("Http","Connection failed");
         }
 
-        //Date now = new Date();
-        //System.out.println(now.toString());
         try
         {
+            ans = new ArrayList<>();
             JSONObject json = new JSONObject(sbx.toString());
-            //System.out.println(json.get("pageSize"));
-            //System.out.println(json.getJSONArray("data"));
 
-            int pageSize = json.getInt("pageSize");
-            int total = json.getInt("total");
+            pageSize = json.getInt("pageSize");
+            total = json.getInt("total");
             JSONArray data = json.getJSONArray("data");
-            for(int i = 0;i < data.length();i ++)
-            {
-
+            for(int i = 0;i < data.length();i ++) {
+                JSONObject newsjson = data.getJSONObject(i);
+                News news = new News();
+                news.setTitle(newsjson.getString("title"));
+                news.setContent(newsjson.getString("content"));
+                news.setPublisher(newsjson.getString("publisher"));
+                news.setHashcode(newsjson.getString("newsID"));
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                news.setPublishtime(df.parse(newsjson.getString("publishTime")));
+                ans.add(news);
             }
-        }catch (Exception e)
+            Log.d("http",data.length()+"");
+        }
+        catch (Exception e)
         {
             Log.d("JSON","shitJSON");
         }
+    }
+}
+
+public class HttpConnect
+{
+    public ArrayList<News> ans;
+    public Integer pageSize;
+    public Integer total;
+    HttpConnect(String category,int count)
+    {
+        ans = new ArrayList<News>();
+        pageSize = new Integer(0);
+        total = new Integer(0);
+        Thread thread = new HttpThread(ans,pageSize,total,count,category);
+        thread.start();
+        while(thread.isAlive());
     }
 }

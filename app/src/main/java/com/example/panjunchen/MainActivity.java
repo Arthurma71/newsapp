@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,5 +101,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
         initfragment();
+        TableOperate.init(getApplicationContext());
+        Log.d("http",TableOperate.getInstance().getNewsFromServer("科技",10).toString());
+        TableOperate.getInstance().getNewsSearch("shit",10,10);
+        TableOperate.getInstance().quit();
     }
 }
