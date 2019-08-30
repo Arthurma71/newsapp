@@ -13,20 +13,14 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-class HttpThread extends Thread {
-    ArrayList<News> ans;
-    Integer pageSize;
-    Integer total;
-    int count;
-    String category;
-    HttpThread(ArrayList<News> ans,Integer pageSize,Integer total,int count,String category)
-    {
-        this.ans = ans;
-        this.pageSize = pageSize;
-        this.total = total;
-        this.category = category;
-        this.count = count;
-    }
+public class HttpConnect implements Runnable
+{
+    public ArrayList<News> ans;
+    public Integer pageSize;
+    public Integer total;
+    public int count;
+    public String category;
+
     public void run()
     {
         StringBuilder sbx = new StringBuilder();
@@ -43,7 +37,7 @@ class HttpThread extends Thread {
         catch(Exception e)
         {
             e.printStackTrace();
-            Log.d("Http","Connection failed");
+            Log.d("http","Connection failed");
         }
 
         try
@@ -65,27 +59,22 @@ class HttpThread extends Thread {
                 news.setPublishtime(df.parse(newsjson.getString("publishTime")));
                 ans.add(news);
             }
-            Log.d("http",data.length()+"");
+            Log.d("http","data length:"+ data.length()+"");
+            Log.d("http","total:"+total+"");
+            Log.d("http","page size:"+pageSize+"");
         }
         catch (Exception e)
         {
             Log.d("JSON","shitJSON");
         }
     }
-}
 
-public class HttpConnect
-{
-    public ArrayList<News> ans;
-    public Integer pageSize;
-    public Integer total;
     HttpConnect(String category,int count)
     {
         ans = new ArrayList<News>();
         pageSize = new Integer(0);
         total = new Integer(0);
-        Thread thread = new HttpThread(ans,pageSize,total,count,category);
-        thread.start();
-        while(thread.isAlive());
+        this.category = category;
+        this.count = count;
     }
 }

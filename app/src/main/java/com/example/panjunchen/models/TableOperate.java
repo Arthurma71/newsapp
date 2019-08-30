@@ -117,6 +117,9 @@ public class TableOperate {
     public List<News> getNewsFromServer(String category,int count)
     {
         HttpConnect httpConnect = new HttpConnect(category,count);
+        Thread a = new Thread(httpConnect);
+        a.start();
+        while(a.isAlive());
         return httpConnect.ans;
     }
 
