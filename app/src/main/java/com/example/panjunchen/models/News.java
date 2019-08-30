@@ -1,4 +1,4 @@
-package com.example.myapplication.models;
+package com.example.panjunchen.models;
 
 import java.util.Date;
 

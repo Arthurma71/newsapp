@@ -10,4 +10,14 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="entertain">娱乐</string>
+    <string name="military">军事</string>
+    <string name="education">教育</string>
+    <string name="culture">文化</string>
+    <string name="health">健康</string>
+    <string name="economy">财经</string>
+    <string name="sports">体育</string>
+    <string name="cars">汽车</string>
+    <string name="technology">科技</string>
+    <string name="society">社会</string>
 </resources>

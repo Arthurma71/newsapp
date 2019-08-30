@@ -1,4 +1,4 @@
-package com.example.myapplication.models;
+package com.example.panjunchen.models;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
