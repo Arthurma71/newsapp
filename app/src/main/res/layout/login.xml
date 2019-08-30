@@ -3,10 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/newslist"
+    <TextView
+        android:id="@+id/logtext"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom" />
-
+        android:layout_height="wrap_content"
+        android:text="account" />
 </LinearLayout>
