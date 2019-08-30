@@ -5,15 +5,16 @@ import android.util.Log;
 import java.io.*;
 import java.net.*;
 
-public class AccountServerConnect {
-    public AccountServerConnect()
+public class AccountServerConnect extends Thread {
+    public void run()
     {
         try{
-            Socket socket=new Socket("183.172.168.93",52134);
+            Socket socket=new Socket("192.168.0.107",4700);
             PrintWriter os=new PrintWriter(socket.getOutputStream());
             BufferedReader is=new BufferedReader( new InputStreamReader(socket.getInputStream()));
             String readline;
             readline="sin.readLine()";
+            Log.d("AccountServer","Connection OK");
             os.println(readline);
             os.flush();
             readline="bye";
@@ -24,7 +25,7 @@ public class AccountServerConnect {
             socket.close();
             Log.d("AccountServer","connection success");
         }catch(Exception e) {
-            Log.d("AccountServer","connection failed");
+            e.printStackTrace();
         }
     }
 }
