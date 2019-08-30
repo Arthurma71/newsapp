@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.panjunchen;
 
 import org.junit.Test;
 

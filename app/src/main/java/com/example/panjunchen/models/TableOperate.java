@@ -1,14 +1,11 @@
-package com.example.myapplication.models;
+package com.example.panjunchen.models;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
-import java.util.ArrayList;
 
 public class TableOperate {
     private SQLiteDatabase db;
-    private static File configFile;
     private static TableOperate tableOperate;
 
     public static void init(Context context) {
@@ -26,6 +23,8 @@ public class TableOperate {
         DBManager manager = DBManager.newInstances(context);
         db = manager.getDataBase();
     }
+
+
 /*
     News getNoteAt(int index) {
         ArrayList<News> noteList = new ArrayList<>();
