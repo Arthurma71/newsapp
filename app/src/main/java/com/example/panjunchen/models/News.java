@@ -20,7 +20,8 @@ public class News {
         title = "this is a title";
         content = "this is a content";
         publishtime = new Date(0);
-        isfavorite = true;
+        isfavorite = false;
+        DBindex = -1;
         readtime = new Date(0);
         publisher = "MWC";
         tag = new ArrayList<String>();

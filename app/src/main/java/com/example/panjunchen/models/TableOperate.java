@@ -116,7 +116,8 @@ public class TableOperate {
 
     public List<News> getNewsFromServer(String category,int count)
     {
-        return new ArrayList<>();
+        HttpConnect httpConnect = new HttpConnect(category,count);
+        return httpConnect.ans;
     }
 
     public List<News> getNewsFromLocal(String category,int count,int index)
