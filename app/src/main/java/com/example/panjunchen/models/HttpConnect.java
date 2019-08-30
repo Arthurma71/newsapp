@@ -4,11 +4,15 @@ import android.util.Log;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 class HttpConnect
 {
+    public ArrayList<News> ans;
     HttpConnect()
     {
         StringBuilder sbx = new StringBuilder();
@@ -16,7 +20,7 @@ class HttpConnect
             String a = "https://api2.newsminer.net/svc/news/queryNewsList";
             URL url = new URL(a);
             URLConnection httpUrl = url.openConnection();
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(),"utf-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = br.readLine()) != null) {
                 sbx.append(line);

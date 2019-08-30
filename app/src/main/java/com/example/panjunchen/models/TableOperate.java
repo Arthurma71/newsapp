@@ -5,10 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -141,6 +137,11 @@ public class TableOperate {
     public List<String> getSearchHistory()
     {
         return serachHistory;
+    }
+
+    public List<News> getFavorite(int count,int index)
+    {
+        return new ArrayList<>();
     }
 
     public void clearSearchHistory()

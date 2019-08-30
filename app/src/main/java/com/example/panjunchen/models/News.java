@@ -9,6 +9,7 @@ public class News {
     private String content;
     private Date publishtime;
     private boolean isfavorite;
+    private int DBindex;
     private Date readtime;
     private String publisher;
     private String hashcode;
@@ -54,6 +55,10 @@ public class News {
         return title;
     }
 
+    public int getDBindex() {
+        return DBindex;
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -81,5 +86,9 @@ public class News {
 
     public void setHashcode(String hashcode) {
         this.hashcode = hashcode;
+    }
+
+    public void setDBindex(int DBindex) {
+        this.DBindex = DBindex;
     }
 }
