@@ -8,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.myapplication.models.AccountServerConnect;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initviews();
+        new AccountServerConnect();
     }
     public void initviews()
     {
