@@ -1,24 +1,29 @@
 package com.example.panjunchen;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
-import android.widget.ListView;
+import androidx.fragment.app.Fragment;
+
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 
-public class Fragment_news extends Fragment {
+public class Fragment_news extends Fragment implements View.OnClickListener  {
     private HorizontalScrollView hs;
     private ViewPager vp;
     private String[] titles;
+    private TextView sections[];
+    private LinearLayout liner;
+    private ArrayList<Fragment> sectionpage;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.newslist,container,false);
@@ -29,11 +34,17 @@ public class Fragment_news extends Fragment {
         super.onActivityCreated(savedInstanceState);
         hs=getActivity().findViewById(R.id.sectionscroll);
         vp=getActivity().findViewById(R.id.viewpager);
-        titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"}
-        vp.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        liner=getActivity().findViewById(R.id.sectionnav);
+        sectionpage=new ArrayList<Fragment>();
+        titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
+        inittext();
+
+        vp.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return new Section(titles[position]);
+                Fragment frag= new Section(titles[position]);
+                sectionpage.add(frag);
+                return frag;
             }
 
             @Override
@@ -41,44 +52,67 @@ public class Fragment_news extends Fragment {
                 return titles.length;
             }
         });
+        setOnClickListener();
+    }
 
-        private void setOnClickListener() {
-            view_pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                //当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直被调用。
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-                // 此方法是页面跳转完后被调用
-                @Override
-                public void onPageSelected(int position) {
-                    // 标题变色,用循环改变标题颜色,通过判断来决定谁红谁灰;
-                    // 举例:娱乐的下标是position是1
-                    for (int i = 0; i < titles.length; i++) {
-                        if(i == position){
-                            titlesView.get(i).setTextColor(Color.RED);
-                        }else {
-                            titlesView.get(i).setTextColor(Color.GRAY);
-                        }
-
-                    }
-                    // 标题滑动功能
-                    int width = titlesView.get(position).getWidth();
-                    int totalWidth = (width +20)*position;
-                    hs.scrollTo(totalWidth,0);
-                }
-
-                // 此方法是在状态改变的时候调用。
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-
+    private void inittext() {
+        sections=new TextView[titles.length];
+        for(int i=0;i<titles.length;i++)
+        {
+            TextView text=new TextView(getActivity());
+            text.setText(titles[i]);
+            text.setTextSize(25);
+            if (i == 0) {
+                text.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+            text.setText(titles[i]);
+            text.setId(i);
+            text.setOnClickListener(this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(10,10,10,10);//设置左上右下四个margin值;
+            liner.addView(text,layoutParams);
+            sections[i]=text;
         }
+    }
+
+    private void setOnClickListener() {
+        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            //当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直被调用。
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            // 此方法是页面跳转完后被调用
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < titles.length; i++) {
+                    if (i == position) {
+                        sections[i].setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                    } else {
+                        sections[i].setTextColor(Color.GRAY);
+                    }
+
+                }
+                // 标题滑动功能
+                int width = sections[position].getWidth();
+                int totalWidth = (width + 20) * position;
+                hs.smoothScrollTo(totalWidth, 0);
+            }
+
+            // 此方法是在状态改变的时候调用。
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
+    }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        vp.setCurrentItem(id);
     }
 }
