@@ -1,6 +1,8 @@
 package com.example.panjunchen.models;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -16,14 +18,14 @@ public class TableOperate {
     private SQLiteDatabase db;
     private static TableOperate tableOperate;
     private static HashMap<String,Double> recommendList;
-    private static ArrayList<String> serachHistory;
+    private static ArrayList<String> searchHistory;
     private static String savePath;
 
     public static void init(Context context) {
         tableOperate = new TableOperate(context);
         savePath = context.getExternalFilesDir(null).getAbsolutePath();
 
-        serachHistory = new ArrayList<>();
+        searchHistory = new ArrayList<>();
         recommendList = new HashMap<String,Double>();
 
         File file = new File(savePath + File.separator + "config");
@@ -50,7 +52,7 @@ public class TableOperate {
                 for (int i = 0;i <n;i ++)
                 {
                     String a = scannerSH.nextLine();
-                    serachHistory.add(a);
+                    searchHistory.add(a);
                 }
             }catch (Exception e)
             {
@@ -59,7 +61,7 @@ public class TableOperate {
 
         }
 
-        Log.d("init","SHsize:"+serachHistory.size());
+        Log.d("init","SHsize:"+searchHistory.size());
     }
 
     public static TableOperate getInstance() {
@@ -92,8 +94,8 @@ public class TableOperate {
                 printStreamRL.println(entry.getValue());
             }
 
-            printStreamSH.println(serachHistory.size());
-            for(String a: serachHistory)
+            printStreamSH.println(searchHistory.size());
+            for(String a: searchHistory)
             {
                 printStreamSH.println(a);
             }
@@ -104,9 +106,24 @@ public class TableOperate {
         }
     }
 
-    private void addNews(News news)
+    public void addNews(News news)
     {
-
+        Log.d("debug0001", "insert into " + TableConfig.News.NEWS_TABLE_NAME + " values(" + news.getTitle() + "," + news.getHashcode() + ")");
+        ContentValues cValue = new ContentValues();
+        cValue.put(TableConfig.News.NEWS_TITLE, news.getTitle());
+        cValue.put(TableConfig.News.NEWS_CONTENT, news.getContent());
+        cValue.put(TableConfig.News.NEWS_READTIME, Long.toString(news.getReadtime().getTime()));
+        cValue.put(TableConfig.News.NEWS_PUBLISH_TIME, Long.toString(news.getPublishtime().getTime()));
+        cValue.put(TableConfig.News.NEWS_PUBLISHER, news.getPublisher());
+        cValue.put(TableConfig.News.NEWS_HASHCODE, news.getHashcode());
+        cValue.put(TableConfig.News.NEWS_FAVORITE,Boolean.toString(news.isIsfavorite()));
+        db.insert(TableConfig.News.NEWS_TABLE_NAME, null, cValue);
+        String sql = "Select * from " + TableConfig.News.NEWS_TABLE_NAME;
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToLast();
+        int count = cursor.getInt(0);
+        cursor.close();
+        news.setDBindex(count);
     }
 
     public void renewNews(News news)
@@ -121,6 +138,19 @@ public class TableOperate {
         a.start();
         while(a.isAlive());
         return httpConnect.ans;
+    }
+
+    public boolean isinDB(String hashcode)
+    {
+        Cursor c = db.rawQuery("Select * from " + TableConfig.News.NEWS_TABLE_NAME + " where " + TableConfig.News.NEWS_HASHCODE + " = '" + hashcode + "'", null);
+        if(c.moveToFirst() == false) {
+            c.close();
+            return false;
+        }
+        else {
+            c.close();
+            return true;
+        }
     }
 
     public List<News> getNewsFromLocal(String category,int count,int index)
@@ -140,7 +170,7 @@ public class TableOperate {
 
     public List<String> getSearchHistory()
     {
-        return serachHistory;
+        return searchHistory;
     }
 
     public List<News> getFavorite(int count,int index)
@@ -150,12 +180,12 @@ public class TableOperate {
 
     public void clearSearchHistory()
     {
-
+        searchHistory.clear();
     }
 
     public List<News> getNewsSearch(String keyword,int count,int index)
     {
-        if(!serachHistory.contains(keyword))serachHistory.add(keyword);
+        if(!searchHistory.contains(keyword))searchHistory.add(keyword);
         return new ArrayList<>();
     }
 }

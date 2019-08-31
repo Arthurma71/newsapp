@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
@@ -102,8 +106,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
-        Log.d("http",TableOperate.getInstance().getNewsFromServer("科技",10).toString());
-        TableOperate.getInstance().getNewsSearch("shit",10,10);
+        List<News> checklist = TableOperate.getInstance().getNewsFromServer("科技",10);
+
+        for(int i = 0;i < checklist.size();i ++)
+        {
+            Log.d("httpCheck1",checklist.get(i).getTitle());
+        }
+
+        checklist = TableOperate.getInstance().getNewsFromServer("科技",10);
+
+        for(int i = 0;i < checklist.size();i ++)
+        {
+            Log.d("httpCheck2",checklist.get(i).getTitle());
+        }
+
         TableOperate.getInstance().quit();
     }
 }

@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,49 +25,60 @@ public class HttpConnect implements Runnable
 
     public void run()
     {
-        StringBuilder sbx = new StringBuilder();
-        try{
-            String a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+count+"&categories="+category;
-            URL url = new URL(a);
-            URLConnection httpUrl = url.openConnection();
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(), StandardCharsets.UTF_8));
-            String line;
-            while ((line = br.readLine()) != null) {
-                sbx.append(line);
+        int trycount = count;
+        while(ans.size() < count)
+        {
+            trycount = trycount * 2;
+            StringBuilder sbx = new StringBuilder();
+            try{
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date())+"&categories="+category;
+                Log.d("http",a);
+                URL url = new URL(a);
+                URLConnection httpUrl = url.openConnection();
+                BufferedReader br = new BufferedReader(new InputStreamReader(httpUrl.getInputStream(), StandardCharsets.UTF_8));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sbx.append(line);
+                }
+                br.close();
             }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            Log.d("http","Connection failed");
-        }
-
-        try
-        {
-            ans = new ArrayList<>();
-            JSONObject json = new JSONObject(sbx.toString());
-
-            pageSize = json.getInt("pageSize");
-            total = json.getInt("total");
-            JSONArray data = json.getJSONArray("data");
-            for(int i = 0;i < data.length();i ++) {
-                JSONObject newsjson = data.getJSONObject(i);
-                News news = new News();
-                news.setTitle(newsjson.getString("title"));
-                news.setContent(newsjson.getString("content"));
-                news.setPublisher(newsjson.getString("publisher"));
-                news.setHashcode(newsjson.getString("newsID"));
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                news.setPublishtime(df.parse(newsjson.getString("publishTime")));
-                ans.add(news);
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                Log.d("http","Connection failed");
             }
-            Log.d("http","data length:"+ data.length()+"");
-            Log.d("http","total:"+total+"");
-            Log.d("http","page size:"+pageSize+"");
-        }
-        catch (Exception e)
-        {
-            Log.d("JSON","shitJSON");
+
+            try
+            {
+                ans = new ArrayList<>();
+                JSONObject json = new JSONObject(sbx.toString());
+
+                pageSize = json.getInt("pageSize");
+                total = json.getInt("total");
+                JSONArray data = json.getJSONArray("data");
+                for(int i = 0;i < data.length();i ++) {
+                    JSONObject newsjson = data.getJSONObject(i);
+                    News news = new News();
+                    news.setTitle(newsjson.getString("title"));
+                    news.setContent(newsjson.getString("content"));
+                    news.setPublisher(newsjson.getString("publisher"));
+                    news.setHashcode(newsjson.getString("newsID"));
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    news.setPublishtime(df.parse(newsjson.getString("publishTime")));
+
+                    if(!TableOperate.getInstance().isinDB(news.getHashcode()))
+                    {
+                        ans.add(news);
+                        TableOperate.getInstance().addNews(news);
+                    }
+                    if(ans.size() == count)break;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.d("JSON","shitJSON");
+            }
         }
     }
 
