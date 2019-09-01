@@ -107,16 +107,5 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
-        TableOperate.getInstance().getNewsFromServer("科技",20);
-        List<News> newsList = TableOperate.getInstance().getNewsFromLocal("科技",10,10);
-        for(int i = 0;i < newsList.size();i ++)
-        {
-            Log.d("getNewsFromLocal",newsList.get(i).getTitle());
-        }
-
-        AccountServerConnect accountServerConnect =  new AccountServerConnect("shit","shit","shit","NEW");
-        Thread a = new Thread(accountServerConnect);
-        a.start();
-        while(a.isAlive());
     }
 }

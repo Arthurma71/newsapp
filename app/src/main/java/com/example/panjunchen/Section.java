@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.panjunchen.models.TableOperate;
 
 public class Section extends Fragment{
     private String secname;
-    private ListView lv;
+    private RecyclerView rv;
+    private TableOperate db;
     public Section(String name)
     {
         super();
@@ -28,7 +31,9 @@ public class Section extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        lv=getActivity().findViewById(R.id.newslist);
+        rv=getActivity().findViewById(R.id.newslist);
+        db=TableOperate.getInstance();
+
 
 
     }
