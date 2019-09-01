@@ -6,9 +6,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.panjunchen.models.AccountServerConnect;
+import com.example.panjunchen.models.News;
+import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
@@ -99,5 +106,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
         initfragment();
+        TableOperate.init(getApplicationContext());
+        TableOperate.getInstance().getNewsFromServer("科技",20);
+        List<News> newsList = TableOperate.getInstance().getNewsFromLocal("科技",10,10);
+        for(int i = 0;i < newsList.size();i ++)
+        {
+            Log.d("getNewsFromLocal",newsList.get(i).getTitle());
+        }
+
+        AccountServerConnect accountServerConnect =  new AccountServerConnect("shit","shit","shit","NEW");
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
     }
 }
