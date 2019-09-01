@@ -41,7 +41,6 @@ public class AccountServerConnect implements Runnable {
             PrintWriter os=new PrintWriter(socket.getOutputStream());
             BufferedReader is=new BufferedReader( new InputStreamReader(socket.getInputStream()));
             Log.d("AccountServer","Connection OK");
-
             if(operate == "GET")
             {
                 JSONObject ask = new JSONObject();
@@ -132,7 +131,8 @@ public class AccountServerConnect implements Runnable {
             os.close();
             is.close();
             socket.close();
-            Log.d("AccountServer","connection success");
+            if(isSuccess)Log.d("AccountServer","ask success");
+            else Log.d("AccountServer","ask fail");
         }catch(Exception e) {
             e.printStackTrace();
         }
