@@ -9,6 +9,9 @@ import android.util.Log;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +24,14 @@ public class TableOperate {
     private static HashMap<String,Double> recommendList;
     private static ArrayList<String> searchHistory;
     private static String savePath;
+    public static final String LIST_SEPARATOR = "Sep" + (char) 29;
 
     public static void init(Context context) {
         tableOperate = new TableOperate(context);
         savePath = context.getExternalFilesDir(null).getAbsolutePath();
 
         searchHistory = new ArrayList<>();
-        recommendList = new HashMap<String,Double>();
+        recommendList = new HashMap<>();
 
         File file = new File(savePath + File.separator + "config");
         if(file.exists())
@@ -131,18 +135,47 @@ public class TableOperate {
         return false;
     }
 
+    private String listToString(List<String> src) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String string : src) {
+            stringBuilder.append(string);
+            stringBuilder.append(LIST_SEPARATOR);
+        }
+        return stringBuilder.toString();
+    }
+
+    private List<String> stringToList(String src) {
+        if (src.length() == 0) return new ArrayList<>();
+        String[] strings = src.split(LIST_SEPARATOR);
+        return Arrays.asList(strings);
+    }
+
+    public void addTags(String tag,double score,int DBindex)
+    {
+        Log.d("addTags",tag + " " + score + " " + DBindex);
+        ContentValues cValue = new ContentValues();
+        cValue.put(TableConfig.Tags.TAGS_INDEX,DBindex);
+        cValue.put(TableConfig.Tags.TAGS_VAL,Double.toString(score));
+        cValue.put(TableConfig.Tags.TAGS_TAG,tag);
+        db.insert(TableConfig.Tags.TAGS_TABLE_NAME,null,cValue);
+    }
+
     public void addNews(News news)
     {
         Log.d("addNews", "insert into " + TableConfig.News.NEWS_TABLE_NAME + " values(" + news.getTitle() + "," + news.getHashcode() + ")");
+        Log.d("imageURL",news.getImageURL().toString());
         ContentValues cValue = new ContentValues();
         cValue.put(TableConfig.News.NEWS_TITLE, news.getTitle());
         cValue.put(TableConfig.News.NEWS_CONTENT, news.getContent());
         cValue.put(TableConfig.News.NEWS_READTIME, Long.toString(news.getReadtime().getTime()));
-        cValue.put(TableConfig.News.NEWS_PUBLISH_TIME, Long.toString(news.getPublishtime().getTime()));
+        cValue.put(TableConfig.News.NEWS_PUBLISH_TIME, news.getPublishtime().getTime());
         cValue.put(TableConfig.News.NEWS_PUBLISHER, news.getPublisher());
         cValue.put(TableConfig.News.NEWS_HASHCODE, news.getHashcode());
-        cValue.put(TableConfig.News.NEWS_FAVORITE,news.isIsfavorite());
+        if(news.isIsfavorite()) cValue.put(TableConfig.News.NEWS_FAVORITE,1);
+        else cValue.put(TableConfig.News.NEWS_FAVORITE,0);
         cValue.put(TableConfig.News.NEWS_CATEGORY,news.getCategory());
+        cValue.put(TableConfig.News.NEWS_IMAGE,listToString(news.getImageURL()));
+        cValue.put(TableConfig.News.NEWS_VIDEO,news.getVideoURL());
         db.insert(TableConfig.News.NEWS_TABLE_NAME, null, cValue);
         String sql = "Select * from " + TableConfig.News.NEWS_TABLE_NAME;
         Cursor cursor = db.rawQuery(sql, null);
@@ -157,8 +190,20 @@ public class TableOperate {
         String favorite;
         if(news.isIsfavorite())favorite = "1";
         else favorite = "0";
-        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+Long.toString(news.getReadtime().getTime())+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
+        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
         db.execSQL(sql);
+        if(news.getReadtime().getTime() != 0) {
+            Cursor c = db.rawQuery("Select * from " + TableConfig.Tags.TAGS_TABLE_NAME + " where " + TableConfig.Tags.TAGS_INDEX + "=" + news.getDBindex(), null);
+            while(c.moveToNext()) {
+                String word = c.getString(0);
+                Double score = Double.valueOf(c.getString(2));
+                if(recommendList.containsKey(word))
+                {
+                    recommendList.put(word,score + recommendList.get(word));
+                }
+                else recommendList.put(word,score);
+            }
+        }
     }
 
     public List<News> getNewsFromServer(String category,int count)
@@ -188,8 +233,6 @@ public class TableOperate {
         ArrayList<News> newsList = new ArrayList<>();
         String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_CATEGORY + " ='" + category + "'" +" ORDER BY " + TableConfig.News.NEWS_ID + " DESC";
         Cursor c = db.rawQuery(sql, null);
-        Log.d("getNewsFromLocal",sql);
-        Log.d("getNewsFromLocal"," "+c.getCount());
         c.move(index);
         while (c.moveToNext()&&count!=0) {
             News temp = new News();
@@ -205,6 +248,8 @@ public class TableOperate {
             temp.setHashcode(c.getString(6));
             temp.setIsfavorite(c.getInt(7));
             temp.setCategory(category);
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
             newsList.add(temp);
             count --;
         }
@@ -212,14 +257,98 @@ public class TableOperate {
         return newsList;
     }
 
+    private News getNewsAt(int index)
+    {
+        News temp = new News();
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_ID + "=" +index;
+        Cursor c = db.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            temp.setDBindex(c.getInt(0));
+            temp.setTitle(c.getString(1));
+            temp.setContent(c.getString(2));
+            temp.setPublisher(c.getString(3));
+            Date tempDate = new Date();
+            tempDate.setTime(Long.parseLong(c.getString(4)));
+            temp.setPublishtime(tempDate);
+            tempDate.setTime(Long.parseLong(c.getString(5)));
+            temp.setReadtime(tempDate);
+            temp.setHashcode(c.getString(6));
+            temp.setIsfavorite(c.getInt(7));
+            temp.setCategory(c.getString(8));
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
+        }
+        c.close();
+        return temp;
+    }
+
     public List<News> getRecommend(int count,int index)
     {
-        return new ArrayList<>();
+        List<News> newsList = new ArrayList<>();
+
+        List<Map.Entry<String, Double>> list = new ArrayList<>(recommendList.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2) {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        List<Integer> numList = new ArrayList<>();
+        int indexNow = 0;
+
+        for (Map.Entry<String, Double> mapping : list) {
+            System.out.println(mapping.getKey() + ":" + mapping.getValue());
+            String sql = "SELECT * FROM " + TableConfig.Tags.TAGS_TABLE_NAME + " WHERE " + TableConfig.Tags.TAGS_TAG + " = '" + mapping.getKey() + "'";
+            Cursor c = db.rawQuery(sql, null);
+            while (c.moveToNext()) {
+                if(numList.contains(c.getInt(1)))continue;
+                if(indexNow >= index) {
+                    newsList.add(getNewsAt(c.getInt(1)));
+                    count --;
+                    if(count == 0)break;
+                }
+                numList.add(c.getInt(1));
+                indexNow ++;
+            }
+            c.close();
+        }
+
+        if(count != 0) {
+            List<News> more = getNewsFromServer("",count);
+            newsList.addAll(more);
+        }
+
+        return newsList;
     }
 
     public List<News> getHistory(int count,int index)
     {
-        return new ArrayList<>();
+        ArrayList<News> newsList = new ArrayList<>();
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_READTIME + " > 0 " +" ORDER BY " + TableConfig.News.NEWS_READTIME + " DESC";
+        Cursor c = db.rawQuery(sql, null);
+        c.move(index);
+        while (c.moveToNext()&&count!=0) {
+            News temp = new News();
+            temp.setDBindex(c.getInt(0));
+            temp.setTitle(c.getString(1));
+            temp.setContent(c.getString(2));
+            temp.setPublisher(c.getString(3));
+            Date tempDate = new Date();
+            tempDate.setTime(Long.parseLong(c.getString(4)));
+            temp.setPublishtime(tempDate);
+            tempDate.setTime(Long.parseLong(c.getString(5)));
+            temp.setReadtime(tempDate);
+            temp.setHashcode(c.getString(6));
+            temp.setIsfavorite(c.getInt(7));
+            temp.setCategory(c.getString(8));
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
+            newsList.add(temp);
+            count --;
+        }
+        c.close();
+        return newsList;
     }
 
     public List<String> getSearchHistory()
@@ -247,6 +376,8 @@ public class TableOperate {
             temp.setHashcode(c.getString(6));
             temp.setIsfavorite(c.getInt(7));
             temp.setCategory(c.getString(8));
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
             newsList.add(temp);
             count --;
         }
@@ -281,6 +412,8 @@ public class TableOperate {
             temp.setHashcode(c.getString(6));
             temp.setIsfavorite(c.getInt(7));
             temp.setCategory(c.getString(8));
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
             newsList.add(temp);
             count --;
         }

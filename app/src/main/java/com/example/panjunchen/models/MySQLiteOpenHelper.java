@@ -36,10 +36,12 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
                 + TableConfig.News.NEWS_CONTENT + " TEXT,"
                 + TableConfig.News.NEWS_PUBLISHER + " TEXT,"
                 + TableConfig.News.NEWS_PUBLISH_TIME + " TEXT,"
-                + TableConfig.News.NEWS_READTIME + " TEXT,"
+                + TableConfig.News.NEWS_READTIME + " integer,"
                 + TableConfig.News.NEWS_HASHCODE + " TEXT,"
                 + TableConfig.News.NEWS_FAVORITE + " integer,"
-                + TableConfig.News.NEWS_CATEGORY + " TEXT"+')');
+                + TableConfig.News.NEWS_CATEGORY + " TEXT,"
+                + TableConfig.News.NEWS_IMAGE + " TEXT,"
+                + TableConfig.News.NEWS_VIDEO + " TEXT" +')');
         sqLiteDatabase.execSQL("create table if not exists " + TableConfig.Tags.TAGS_TABLE_NAME + '('
                 + TableConfig.Tags.TAGS_TAG + " TEXT,"
                 + TableConfig.Tags.TAGS_INDEX + " integer,"

@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,9 @@ public class HttpConnect implements Runnable
             StringBuilder sbx = new StringBuilder();
             try{
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                String a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date())+"&categories="+category;
+                String a;
+                if(!category.equals(""))a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date())+"&categories="+category;
+                else a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date());
                 Log.d("http",a);
                 URL url = new URL(a);
                 URLConnection httpUrl = url.openConnection();
@@ -67,12 +70,26 @@ public class HttpConnect implements Runnable
                     news.setHashcode(newsjson.getString("newsID"));
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     news.setPublishtime(df.parse(newsjson.getString("publishTime")));
-                    news.setCategory(category);
+                    news.setCategory(newsjson.getString("category"));
+                    news.setVideoURL(newsjson.getString("video"));
+                    String a = newsjson.getString("image");
+                    a = a.substring(1,a.length() - 1);
+                    String[] ar = a.split(", ");
+                    news.setImageURL(Arrays.asList(ar));
 
                     if(!TableOperate.getInstance().isinDB(news.getHashcode()))
                     {
                         ans.add(news);
                         TableOperate.getInstance().addNews(news);
+                        JSONArray taglist =  newsjson.getJSONArray("keywords");
+                        for(int j = 0;j < taglist.length();j ++)
+                        {
+                            JSONObject tempObject = taglist.getJSONObject(j);
+                            double score = tempObject.getDouble("score");
+                            String word = tempObject.getString("word");
+                            if(score < 0.1)break;
+                            TableOperate.getInstance().addTags(word,score,news.getDBindex());
+                        }
                     }
                     if(ans.size() == count)break;
                 }

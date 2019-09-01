@@ -65,7 +65,19 @@ public class AccountServerConnect implements Runnable {
             }
             else if(operate == "RENEW")
             {
+                JSONObject ask = new JSONObject();
+                ask.put("OPERATE","RENEW");
+                ask.put("ACCOUNT",username);
+                ask.put("PASSWORD",password);
+                ask.put("NEWPASSWORD",newPassword);
+                ask.put("URL",imageURL);
+                Log.d("AccountServer",ask.toString());
+                os.println(ask.toString());
+                os.flush();
 
+                String ans = is.readLine();
+                if(ans.equals("OK"))isSuccess = true;
+                os.println("bye");
             }
             else if(operate == "CHANGE")
             {
