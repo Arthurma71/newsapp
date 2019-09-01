@@ -1,5 +1,11 @@
 package com.example.panjunchen.models;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -132,8 +138,29 @@ public class News {
 
     public int getNewsType() {
         if(!videoURL.equals(""))return 3;
-        else if(imageURL.size() == 1)return 0;
-        else if(imageURL.size() > 1)return 1;
+        else if(imageURL.size() <= 2)return 0;
+        else if(imageURL.size() > 2)return 1;
         else return 2;
+    }
+
+    public String toJSONString() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("title", title);
+            json.put("content", content);
+            json.put("publisher", publisher);
+            json.put("newsID", hashcode);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            json.put("publishTime",df.format(publishtime));
+            json.put("readTime",df.format(readtime));
+            json.put("category",category);
+            json.put("video",videoURL);
+            json.put("image",imageURL.toString());
+            json.put("favorite",isfavorite);
+        }catch (Exception e)
+        {
+            Log.d("toJSONString","fail");
+        }
+        return json.toString();
     }
 }

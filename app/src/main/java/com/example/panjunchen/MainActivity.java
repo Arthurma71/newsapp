@@ -6,16 +6,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.panjunchen.models.AccountServerConnect;
-import com.example.panjunchen.models.News;
+import com.example.panjunchen.models.NewsAccount;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
@@ -108,5 +103,9 @@ public class MainActivity extends AppCompatActivity {
         initfragment();
         TableOperate.init(getApplicationContext());
         TableOperate.getInstance().getNewsFromServer("科技",10);
+        NewsAccount account = new NewsAccount("MWC","123456","http://shit.html");
+        TableOperate.getInstance().addNewAccount(account);
+        TableOperate.getInstance().changeAccountPassword(account,"shit2");
+        TableOperate.getInstance().reNewAccount(account);
     }
 }

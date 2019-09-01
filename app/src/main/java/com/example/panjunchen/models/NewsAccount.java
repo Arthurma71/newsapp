@@ -1,11 +1,15 @@
 package com.example.panjunchen.models;
 
-public class Account {
+public class NewsAccount {
     private String username;
     private String password;
     private String imageURL;
 
-    Account(String username,String password,String imageURL)
+    public NewsAccount(){
+
+    }
+
+    public NewsAccount(String username, String password, String imageURL)
     {
         this.username = username;
         this.password = password;
