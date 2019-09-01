@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.panjunchen.models.AccountServerConnect;
 import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -112,5 +113,10 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.d("getNewsFromLocal",newsList.get(i).getTitle());
         }
+
+        AccountServerConnect accountServerConnect =  new AccountServerConnect("shit","shit","shit","NEW");
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
     }
 }

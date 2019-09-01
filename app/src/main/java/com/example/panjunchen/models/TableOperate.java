@@ -107,9 +107,33 @@ public class TableOperate {
         }
     }
 
+    public boolean addNewAccount(Account account)
+    {
+        AccountServerConnect accountServerConnect = new AccountServerConnect(account.getUsername(),account.getPassword()," ",account.getImageURL(),"NEW");
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
+        return accountServerConnect.isSuccess;
+    }
+
+    public boolean loadAccount(Account account)
+    {
+        return false;
+    }
+
+    public boolean reNewAccount(Account account)
+    {
+        return false;
+    }
+
+    public boolean changeAccountPassword(Account account,String newPassword)
+    {
+        return false;
+    }
+
     public void addNews(News news)
     {
-        Log.d("debug0001", "insert into " + TableConfig.News.NEWS_TABLE_NAME + " values(" + news.getTitle() + "," + news.getHashcode() + ")");
+        Log.d("addNews", "insert into " + TableConfig.News.NEWS_TABLE_NAME + " values(" + news.getTitle() + "," + news.getHashcode() + ")");
         ContentValues cValue = new ContentValues();
         cValue.put(TableConfig.News.NEWS_TITLE, news.getTitle());
         cValue.put(TableConfig.News.NEWS_CONTENT, news.getContent());
