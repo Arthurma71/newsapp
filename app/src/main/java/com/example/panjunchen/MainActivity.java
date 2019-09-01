@@ -106,20 +106,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
-        List<News> checklist = TableOperate.getInstance().getNewsFromServer("科技",10);
-
-        for(int i = 0;i < checklist.size();i ++)
+        TableOperate.getInstance().getNewsFromServer("科技",20);
+        List<News> newsList = TableOperate.getInstance().getNewsFromLocal("科技",10,10);
+        for(int i = 0;i < newsList.size();i ++)
         {
-            Log.d("httpCheck1",checklist.get(i).getTitle());
+            Log.d("getNewsFromLocal",newsList.get(i).getTitle());
         }
-
-        checklist = TableOperate.getInstance().getNewsFromServer("科技",10);
-
-        for(int i = 0;i < checklist.size();i ++)
-        {
-            Log.d("httpCheck2",checklist.get(i).getTitle());
-        }
-
-        TableOperate.getInstance().quit();
     }
 }

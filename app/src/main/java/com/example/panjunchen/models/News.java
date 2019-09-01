@@ -8,19 +8,20 @@ public class News {
     private String title;
     private String content;
     private Date publishtime;
-    private boolean isfavorite;
+    private int isfavorite;
     private int DBindex;
     private Date readtime;
     private String publisher;
     private String hashcode;
     private List<String> tag;
+    private String category;
 
     News()
     {
         title = "this is a title";
         content = "this is a content";
         publishtime = new Date(0);
-        isfavorite = false;
+        isfavorite = 0;
         DBindex = -1;
         readtime = new Date(0);
         publisher = "MWC";
@@ -28,8 +29,16 @@ public class News {
         tag.add("baigei");
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
     public boolean isIsfavorite() {
-        return isfavorite;
+        return isfavorite == 1;
     }
 
     public Date getPublishtime() {
@@ -69,7 +78,7 @@ public class News {
     }
 
 
-    public void setIsfavorite(boolean isfavorite) {
+    public void setIsfavorite(int isfavorite) {
         this.isfavorite = isfavorite;
     }
 

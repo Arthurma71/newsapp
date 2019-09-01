@@ -20,6 +20,7 @@ public class TableConfig {
         public static final String NEWS_PUBLISHER = "news_publisher";
         public static final String NEWS_FAVORITE = "news_isfavorite";
         public static final String NEWS_READTIME = "news_readtime";
+        public static final String NEWS_CATEGORY = "news_category";
     }
 
     public static class Tags {

@@ -26,6 +26,7 @@ public class HttpConnect implements Runnable
     public void run()
     {
         int trycount = count;
+        int pre = 0;
         while(ans.size() < count)
         {
             trycount = trycount * 2;
@@ -57,7 +58,7 @@ public class HttpConnect implements Runnable
                 pageSize = json.getInt("pageSize");
                 total = json.getInt("total");
                 JSONArray data = json.getJSONArray("data");
-                for(int i = 0;i < data.length();i ++) {
+                for(int i = pre;i < data.length();i ++) {
                     JSONObject newsjson = data.getJSONObject(i);
                     News news = new News();
                     news.setTitle(newsjson.getString("title"));
@@ -66,6 +67,7 @@ public class HttpConnect implements Runnable
                     news.setHashcode(newsjson.getString("newsID"));
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     news.setPublishtime(df.parse(newsjson.getString("publishTime")));
+                    news.setCategory(category);
 
                     if(!TableOperate.getInstance().isinDB(news.getHashcode()))
                     {
@@ -74,6 +76,7 @@ public class HttpConnect implements Runnable
                     }
                     if(ans.size() == count)break;
                 }
+                pre = data.length();
             }
             catch (Exception e)
             {
