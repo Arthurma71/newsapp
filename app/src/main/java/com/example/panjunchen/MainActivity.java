@@ -2,6 +2,7 @@ package com.example.panjunchen;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -99,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    protected void revRecreate() {
+        recreate();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

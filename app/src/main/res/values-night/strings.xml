@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">日头条</string>
+    <string name="Hello_world">Hello World</string>
+    <string name="love">收藏夹</string>
+    <string name="log">登录</string>
+    <string name="setting">设置</string>
+    <string name="view">新闻</string>
+    <string name="title">专家解读央行新政：个人房贷利率不会下降 避免刺激房地产</string>
+    <string name="title_activity_navigation">navigation</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="entertain">娱乐</string>
+    <string name="military">军事</string>
+    <string name="education">教育</string>
+    <string name="culture">文化</string>
+    <string name="health">健康</string>
+    <string name="economy">财经</string>
+    <string name="sports">体育</string>
+    <string name="cars">汽车</string>
+    <string name="technology">科技</string>
+    <string name="society">社会</string>
+    <string name="recommand">推荐</string>
+</resources>
