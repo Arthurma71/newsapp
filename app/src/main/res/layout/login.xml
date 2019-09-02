@@ -1,57 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/h_back"
-        android:layout_width="match_parent"
-        android:layout_height="180dp" />
-
-    <ImageView
-        android:id="@+id/h_head"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_centerInParent="true" />
+    xmlns:my="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/h_back"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal">
+        android:layout_height="217dp"
+        android:background="@drawable/commom_top"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:ignore="MissingConstraints">
 
         <ImageView
-            android:id="@+id/user_line"
-            android:layout_width="1dp"
-            android:layout_height="25dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="15dp"
-            android:background="@android:color/white" />
+            android:id="@+id/h_back"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
-        <TextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/user_line"
-            android:text="张三"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+        <ImageView
+            android:id="@+id/h_head"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="false"
+            android:background="@drawable/head" />
 
-        <TextView
-            android:id="@+id/user_val"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/user_line"
-            android:text="182****5882"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+            android:layout_alignBottom="@id/h_back"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
+            tools:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:text="张三"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
         </RelativeLayout>
+
     </RelativeLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:stv="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="20dp">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/history_button"
+                    stv:sDividerLineType="both"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sLeftTextString="历史记录"
+                    stv:sRightIconRes="@drawable/arrow_right_red" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/clearHistory_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sDividerLineType="both"
+                    stv:sLeftTextString="清空历史"
+                    stv:sRightIconRes="@drawable/arrow_right_red" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/changeImage_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sLeftTextString="更改头像"
+                    stv:sRightIconRes="@drawable/arrow_right_red" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/changePassword_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sDividerLineType="both"
+                    stv:sLeftTextString="密码修改"
+                    stv:sRightIconRes="@drawable/arrow_right_red" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/login_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    stv:sDividerLineType="both"
+                    stv:sCenterTextString="登录账户" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 </LinearLayout>

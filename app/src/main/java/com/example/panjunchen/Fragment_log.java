@@ -18,6 +18,7 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class Fragment_log extends Fragment {
     private TextView textview;
+    private TextView username;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login,container,false);
@@ -26,15 +27,7 @@ public class Fragment_log extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*
-        textview=getActivity().findViewById(R.id.logtext);
-        //设置背景磨砂效果
-        Glide.with(this).load(R.drawable.head)
-                .bitmapTransform(new BlurTransformation(this, 25), new CenterCrop(this))
-                .into(mHBack);
-        //设置圆形图像
-        Glide.with(this).load(R.drawable.head)
-                .bitmapTransform(new CropCircleTransformation(this))
-                .into(mHHead);*/
+
+        //username = getActivity().findViewById(R.id.user_name);
     }
 }

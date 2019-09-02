@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/settingtext"
+        xmlns:stv="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="setting" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="20dp">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/modeSwitch_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sDividerLineType="both"
+                    stv:sLeftTextString="切换到"
+                    stv:sRightIconRes="@drawable/arrow_right_red"
+                    stv:sRightTextString="夜间模式" />
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/clearCache_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    stv:sLeftTextString="清空缓存"
+                    stv:sRightIconRes="@drawable/arrow_right_red" />
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>

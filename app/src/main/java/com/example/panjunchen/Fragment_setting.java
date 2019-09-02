@@ -20,6 +20,6 @@ public class Fragment_setting extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        textview=getActivity().findViewById(R.id.settingtext);
+        //textview=getActivity().findViewById(R.id.settingtext);
     }
 }

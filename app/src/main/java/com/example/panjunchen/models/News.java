@@ -138,7 +138,7 @@ public class News {
 
     public int getNewsType() {
         if(!videoURL.equals(""))return 3;
-        else if(imageURL.size() <= 2)return 0;
+        else if(imageURL.size() <= 2 && imageURL.size()>0)return 0;
         else if(imageURL.size() > 2)return 1;
         else return 2;
     }
