@@ -26,7 +26,7 @@ public class HttpConnect implements Runnable
 
     public void run()
     {
-        int trycount = count;
+        int trycount = count * 5;
         int pre = 0;
         while(ans.size() < count)
         {
@@ -51,6 +51,7 @@ public class HttpConnect implements Runnable
             {
                 e.printStackTrace();
                 Log.d("http","Connection failed");
+                break;
             }
 
             try
