@@ -157,7 +157,7 @@ public class TableOperate {
     public boolean reNewAccount(NewsAccount newsAccount)
     {
         ArrayList<News> newsList = new ArrayList<>();
-        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_READTIME + " > 0";
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_READTIME + " > 0 OR " + TableConfig.News.NEWS_FAVORITE + " = 1";
         Cursor c = db.rawQuery(sql, null);
         while (c.moveToNext()) {
             News temp = new News();
@@ -442,6 +442,22 @@ public class TableOperate {
         }
         c.close();
         return newsList;
+    }
+
+    public void clearCache(){
+
+        ArrayList<Integer> indexList = new ArrayList<>();
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_FAVORITE + " = 0 AND " + TableConfig.News.NEWS_READTIME +"= 0 ORDER BY " + TableConfig.News.NEWS_ID + " DESC";
+
+        Cursor c = db.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            indexList.add(c.getInt(0));
+        }
+        c.close();
+
+        for(int i = 0;i < indexList.size();i ++){
+            db.execSQL("delete from " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_ID + "=" + indexList.get(i));
+        }
     }
 
     public void clearSearchHistory()

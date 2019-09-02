@@ -106,6 +106,5 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
 }

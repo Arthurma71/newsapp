@@ -79,10 +79,12 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
             }
             text.setText(titles[i]);
             text.setId(i);
+            text.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             text.setOnClickListener(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10,10,10,10);//设置左上右下四个margin值;
             liner.addView(text,layoutParams);
+            liner.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             sections[i]=text;
         }
     }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.allen.library.SuperTextView;
+import com.example.panjunchen.models.TableOperate;
 
 public class Fragment_setting extends Fragment {
     private SuperTextView modeSwitchView;
@@ -48,7 +50,9 @@ public class Fragment_setting extends Fragment {
         clearCacheView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                TableOperate.getInstance().clearCache();
+                Toast toast=Toast.makeText(getContext(),"清除缓存成功",Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }

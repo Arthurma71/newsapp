@@ -40,7 +40,8 @@ public class News {
     }
 
     public void setImageURL(List<String> imageURL) {
-        this.imageURL = imageURL;
+        if(imageURL.size() == 1&&imageURL.get(0).equals(""))this.imageURL = new ArrayList<>();
+        else this.imageURL = imageURL;
     }
 
     public void setVideoURL(String videoURL) {
