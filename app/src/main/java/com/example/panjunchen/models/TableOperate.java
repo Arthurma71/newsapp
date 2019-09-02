@@ -22,8 +22,9 @@ public class TableOperate {
     private SQLiteDatabase db;
     private static TableOperate tableOperate;
     private static HashMap<String,Double> recommendList;
-    private static ArrayList<String> searchHistory;
+    private static List<String> searchHistory;
     private static String savePath;
+    private static NewsAccount currentNewsAccount;
     public static final String LIST_SEPARATOR = "Sep" + (char) 29;
 
     public static void init(Context context) {
@@ -32,6 +33,8 @@ public class TableOperate {
 
         searchHistory = new ArrayList<>();
         recommendList = new HashMap<>();
+
+        currentNewsAccount = new NewsAccount("未登录","","");
 
         File file = new File(savePath + File.separator + "config");
         if(file.exists())
@@ -111,28 +114,84 @@ public class TableOperate {
         }
     }
 
-    public boolean addNewAccount(Account account)
+    public static NewsAccount getCurrentNewsAccount() {
+        return currentNewsAccount;
+    }
+
+    public boolean addNewAccount(NewsAccount newsAccount)
     {
-        AccountServerConnect accountServerConnect = new AccountServerConnect(account.getUsername(),account.getPassword()," ",account.getImageURL(),"NEW");
+        AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword()," ", newsAccount.getImageURL(),"NEW",new ArrayList<News>());
         Thread a = new Thread(accountServerConnect);
         a.start();
         while(a.isAlive());
         return accountServerConnect.isSuccess;
     }
 
-    public boolean loadAccount(Account account)
+    public boolean loadAccount(NewsAccount newsAccount)
     {
-        return false;
+        AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword()," ", newsAccount.getImageURL(),"GET",new ArrayList<News>());
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
+
+        if(accountServerConnect.isSuccess){
+            String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"=0"+", "+TableConfig.News.NEWS_READTIME+"=0";
+            db.execSQL(sql);
+
+            recommendList.clear();
+            searchHistory.clear();
+
+            searchHistory = accountServerConnect.searchHistory;
+
+            for (int i = 0;i < accountServerConnect.userNews.size();i ++) {
+                renewNews(accountServerConnect.userNews.get(i));
+            }
+
+            currentNewsAccount = newsAccount;
+
+            return true;
+        }
+        else return false;
     }
 
-    public boolean reNewAccount(Account account)
+    public boolean reNewAccount(NewsAccount newsAccount)
     {
-        return false;
+        ArrayList<News> newsList = new ArrayList<>();
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_READTIME + " > 0";
+        Cursor c = db.rawQuery(sql, null);
+        while (c.moveToNext()) {
+            News temp = new News();
+            temp.setDBindex(c.getInt(0));
+            temp.setTitle(c.getString(1));
+            temp.setContent(c.getString(2));
+            temp.setPublisher(c.getString(3));
+            Date tempDate = new Date();
+            tempDate.setTime(Long.parseLong(c.getString(4)));
+            temp.setPublishtime(tempDate);
+            tempDate.setTime(Long.parseLong(c.getString(5)));
+            temp.setReadtime(tempDate);
+            temp.setHashcode(c.getString(6));
+            temp.setIsfavorite(c.getInt(7));
+            temp.setCategory(c.getString(8));
+            temp.setImageURL(stringToList(c.getString(9)));
+            temp.setVideoURL(c.getString(10));
+            newsList.add(temp);
+        }
+        c.close();
+        AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword()," ", newsAccount.getImageURL(),"RENEW",newsList);
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
+        return accountServerConnect.isSuccess;
     }
 
-    public boolean changeAccountPassword(Account account,String newPassword)
+    public boolean changeAccountPassword(NewsAccount newsAccount, String newPassword)
     {
-        return false;
+        AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword(),newPassword, newsAccount.getImageURL(),"CHANGE",new ArrayList<News>());
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
+        return accountServerConnect.isSuccess;
     }
 
     private String listToString(List<String> src) {
@@ -190,7 +249,7 @@ public class TableOperate {
         String favorite;
         if(news.isIsfavorite())favorite = "1";
         else favorite = "0";
-        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
+        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_HASHCODE+"="+news.getHashcode();
         db.execSQL(sql);
         if(news.getReadtime().getTime() != 0) {
             Cursor c = db.rawQuery("Select * from " + TableConfig.Tags.TAGS_TABLE_NAME + " where " + TableConfig.Tags.TAGS_INDEX + "=" + news.getDBindex(), null);
@@ -419,5 +478,16 @@ public class TableOperate {
         }
         c.close();
         return newsList;
+    }
+
+    @Override
+    protected void finalize()throws Throwable{
+        try{
+            quit();
+            if(!currentNewsAccount.getUsername().equals("未登录")) reNewAccount(currentNewsAccount);
+            super.finalize();
+        }catch (Exception e){
+            throw e;
+        }
     }
 }
