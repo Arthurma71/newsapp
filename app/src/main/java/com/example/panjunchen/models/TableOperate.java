@@ -22,7 +22,7 @@ public class TableOperate {
     private SQLiteDatabase db;
     private static TableOperate tableOperate;
     private static HashMap<String,Double> recommendList;
-    private static ArrayList<String> searchHistory;
+    private static List<String> searchHistory;
     private static String savePath;
     private static NewsAccount currentNewsAccount;
     public static final String LIST_SEPARATOR = "Sep" + (char) 29;
@@ -33,6 +33,8 @@ public class TableOperate {
 
         searchHistory = new ArrayList<>();
         recommendList = new HashMap<>();
+
+        currentNewsAccount = new NewsAccount("未登录","","");
 
         File file = new File(savePath + File.separator + "config");
         if(file.exists())
@@ -132,14 +134,24 @@ public class TableOperate {
         a.start();
         while(a.isAlive());
 
-        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"=0"+", "+TableConfig.News.NEWS_READTIME+"=0";
-        db.execSQL(sql);
+        if(accountServerConnect.isSuccess){
+            String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"=0"+", "+TableConfig.News.NEWS_READTIME+"=0";
+            db.execSQL(sql);
 
-        for (int i = 0;i < accountServerConnect.userNews.size();i ++) {
-            renewNews(accountServerConnect.userNews.get(i));
+            recommendList.clear();
+            searchHistory.clear();
+
+            searchHistory = accountServerConnect.searchHistory;
+
+            for (int i = 0;i < accountServerConnect.userNews.size();i ++) {
+                renewNews(accountServerConnect.userNews.get(i));
+            }
+
+            currentNewsAccount = newsAccount;
+
+            return true;
         }
-
-        return true;
+        else return false;
     }
 
     public boolean reNewAccount(NewsAccount newsAccount)
@@ -466,5 +478,16 @@ public class TableOperate {
         }
         c.close();
         return newsList;
+    }
+
+    @Override
+    protected void finalize()throws Throwable{
+        try{
+            quit();
+            if(!currentNewsAccount.getUsername().equals("未登录")) reNewAccount(currentNewsAccount);
+            super.finalize();
+        }catch (Exception e){
+            throw e;
+        }
     }
 }

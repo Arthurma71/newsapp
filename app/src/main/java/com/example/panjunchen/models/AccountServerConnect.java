@@ -21,6 +21,7 @@ public class AccountServerConnect implements Runnable {
     public String newPassword;
     public String imageURL;
     public String operate;
+    public List<String> searchHistory;
     public boolean isSuccess;
 
     public AccountServerConnect(String username,String password,String newPassword,String imageURL,String operate,ArrayList<News> userNews)
@@ -74,6 +75,12 @@ public class AccountServerConnect implements Runnable {
                         userNews.add(news);
                     }
                 }
+                if(json.has("search")){
+                    String a = json.getString("search");
+                    a = a.substring(1,a.length() - 1);
+                    String[] ar = a.split(", ");
+                    searchHistory = Arrays.asList(ar);
+                }
 
                 os.println("bye");
             }
@@ -105,6 +112,7 @@ public class AccountServerConnect implements Runnable {
                     strList.add(userNews.get(i).toJSONString());
                 }
                 ask.put("data",strList.toString());
+                ask.put("search",TableOperate.getInstance().getSearchHistory().toString());
                 Log.d("AccountServer",ask.toString());
                 os.println(ask.toString());
                 os.flush();
