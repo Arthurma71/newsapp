@@ -15,6 +15,8 @@ public class News {
     private String hashcode;
     private List<String> tag;
     private String category;
+    private List<String> imageURL;
+    private String videoURL;
 
     News()
     {
@@ -26,7 +28,33 @@ public class News {
         readtime = new Date(0);
         publisher = "MWC";
         tag = new ArrayList<String>();
+        imageURL = new ArrayList<String>();
+        videoURL = "MWC";
         tag.add("baigei");
+    }
+
+    public void setImageURL(List<String> imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public void setVideoURL(String videoURL) {
+        this.videoURL = videoURL;
+    }
+
+    public void setTag(List<String> tag) {
+        this.tag = tag;
+    }
+
+    public List<String> getTag() {
+        return tag;
+    }
+
+    public List<String> getImageURL() {
+        return imageURL;
+    }
+
+    public String getVideoURL() {
+        return videoURL;
     }
 
     public void setCategory(String category) {
@@ -100,5 +128,12 @@ public class News {
 
     public void setDBindex(int DBindex) {
         this.DBindex = DBindex;
+    }
+
+    public int getNewsType() {
+        if(!videoURL.equals(""))return 3;
+        else if(imageURL.size() == 1)return 0;
+        else if(imageURL.size() > 1)return 1;
+        else return 2;
     }
 }

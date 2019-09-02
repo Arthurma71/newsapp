@@ -21,6 +21,8 @@ public class TableConfig {
         public static final String NEWS_FAVORITE = "news_isfavorite";
         public static final String NEWS_READTIME = "news_readtime";
         public static final String NEWS_CATEGORY = "news_category";
+        public static final String NEWS_IMAGE = "news_image";
+        public static final String NEWS_VIDEO = "news_video";
     }
 
     public static class Tags {

@@ -2,6 +2,7 @@ package com.example.panjunchen;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.panjunchen.models.News;
 
 import java.util.Date;
@@ -59,13 +61,16 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String publisher = list.get(position).getPublisher();
         Date time = list.get(position).getPublishtime();
         String info = publisher + time.toString();
+        List<String> pic=list.get(position).getImageURL();
+        String vid=list.get(position).getVideoURL();
 
         //如果单图文
         if (holder instanceof ViewHolder1) {
 
             ((ViewHolder1) holder).title.setText(title);
             ((ViewHolder1) holder).info.setText(info);
-            ((ViewHolder1) holder).img.setImageURI();
+            Glide.with(_context).load(pic.get(0))
+                    .into(((ViewHolder1) holder).img);
             return;
         }
 
@@ -73,10 +78,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             ((ViewHolder2) holder).title.setText(title);
             ((ViewHolder2) holder).info.setText(info);
-            ((ViewHolder2) holder).img1.setImageURI();
-            ((ViewHolder2) holder).img2.setImageURI();
-            ((ViewHolder2) holder).img3.setImageURI();
-
+            Glide.with(_context).load(pic.get(0))
+                    .into(((ViewHolder2) holder).img1);
+            Glide.with(_context).load(pic.get(1))
+                    .into(((ViewHolder2) holder).img1);
+            Glide.with(_context).load(pic.get(2))
+                    .into(((ViewHolder2) holder).img2);
             return;
         }
         if (holder instanceof ViewHolder3) {
@@ -89,7 +96,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             ((ViewHolder4) holder).title.setText(title);
             ((ViewHolder4) holder).info.setText(info);
-            ((ViewHolder4) holder).video.setVideoURI();
             return;
         }
     }
