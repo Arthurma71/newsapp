@@ -8,11 +8,13 @@
         android:id="@+id/title_03"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:text="TextView" />
 
     <TextView
         android:id="@+id/info_03"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
         android:text="TextView" />
 </LinearLayout>
