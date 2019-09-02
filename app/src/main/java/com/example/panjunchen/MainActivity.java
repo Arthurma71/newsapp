@@ -100,15 +100,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void revRecreate() {
-        recreate();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
 }

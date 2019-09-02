@@ -25,6 +25,11 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
     private TextView sections[];
     private LinearLayout liner;
     private ArrayList<Fragment> sectionpage;
+
+    public Fragment_news(){
+        super();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.newslist,container,false);
