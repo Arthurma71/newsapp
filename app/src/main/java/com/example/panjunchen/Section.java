@@ -1,12 +1,14 @@
 package com.example.panjunchen;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +37,11 @@ public class Section extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("DEBUG:","onCreateView:"+secname);
+        if(adapter!=null)
+        {
+            rv.setAdapter(adapter);
+        }
         View view=inflater.inflate(R.layout.section,container,false);
         return view;
     }
@@ -43,14 +50,16 @@ public class Section extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
+        Log.d("DEBUG:","onActivityCreated:"+secname);
         init();
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
+                Log.d("DEBUG:","refresh:"+secname);
                 List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
                 for(int i=0;i<k.size();i++)
                 {
-                    list.add(k.get(i));
+                    list.add(0 ,k.get(i));
                 }
                 adapter.notifyDataSetChanged();
                 index=10;
@@ -81,14 +90,15 @@ public class Section extends Fragment{
     }
 
     private void init() {
-        rv=getActivity().findViewById(R.id.newslist);
+        rv=getView().findViewById(R.id.newslist);
         db=TableOperate.getInstance();
-        refresh=getActivity().findViewById(R.id.refreshLayout);
-        list=db.getNewsFromServer(secname,10);
+        refresh=getView().findViewById(R.id.refreshLayout);
+        list=db.getNewsFromLocal(secname,10,0);
         index=list.size();
         adapter=new NewsAdapter(list,getContext());
         rv.setAdapter(adapter);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
     }
 
 }

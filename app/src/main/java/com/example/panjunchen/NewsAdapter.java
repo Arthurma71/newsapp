@@ -3,6 +3,7 @@ package com.example.panjunchen;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,42 +61,54 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String title = list.get(position).getTitle();
         String publisher = list.get(position).getPublisher();
         Date time = list.get(position).getPublishtime();
-        String info = publisher + time.toString();
+        String info = publisher +"  "+time.toString()+ " " ;
         List<String> pic=list.get(position).getImageURL();
         String vid=list.get(position).getVideoURL();
 
         //如果单图文
         if (holder instanceof ViewHolder1) {
-
+            info+=" 0";
             ((ViewHolder1) holder).title.setText(title);
+            ((ViewHolder1) holder).title.setTextSize(20);
             ((ViewHolder1) holder).info.setText(info);
+            ((ViewHolder1) holder).info.setTextSize(10);
+            Log.d("URL:",pic.get(0));
             Glide.with(_context).load(pic.get(0))
                     .into(((ViewHolder1) holder).img);
             return;
         }
 
         if (holder instanceof ViewHolder2) {
-
+            info+=" 1";
             ((ViewHolder2) holder).title.setText(title);
+            ((ViewHolder2) holder).title.setTextSize(20);
             ((ViewHolder2) holder).info.setText(info);
+            ((ViewHolder2) holder).info.setTextSize(8);
+            Log.d("URL:",pic.get(0));
+            Log.d("URL:",pic.get(1));
+            Log.d("URL:",pic.get(2));
             Glide.with(_context).load(pic.get(0))
                     .into(((ViewHolder2) holder).img1);
             Glide.with(_context).load(pic.get(1))
-                    .into(((ViewHolder2) holder).img1);
-            Glide.with(_context).load(pic.get(2))
                     .into(((ViewHolder2) holder).img2);
+            Glide.with(_context).load(pic.get(2))
+                    .into(((ViewHolder2) holder).img3);
             return;
         }
         if (holder instanceof ViewHolder3) {
-
+            info+=" 2";
             ((ViewHolder3) holder).title.setText(title);
+            ((ViewHolder3) holder).title.setTextSize(20);
             ((ViewHolder3) holder).info.setText(info);
+            ((ViewHolder3) holder).info.setTextSize(8);
             return;
         }
         if (holder instanceof ViewHolder4) {
-
+            info+=" 3";
             ((ViewHolder4) holder).title.setText(title);
+            ((ViewHolder4) holder).title.setTextSize(20);
             ((ViewHolder4) holder).info.setText(info);
+            ((ViewHolder4) holder).info.setTextSize(8);
             return;
         }
     }

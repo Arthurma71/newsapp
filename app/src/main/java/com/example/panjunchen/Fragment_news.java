@@ -2,6 +2,7 @@ package com.example.panjunchen;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,18 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
         titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
         inittext();
 
+        for(int i=0;i<titles.length;i++)
+        {
+            Section frag=new Section(titles[i]);
+            sectionpage.add(frag);
+        }
+
+
         vp.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                Fragment frag= new Section(titles[position]);
-                sectionpage.add(frag);
-                return frag;
+                Log.d("DEBUG:","my position:"+position);
+                return sectionpage.get(position);
             }
 
             @Override
@@ -113,6 +120,7 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Log.d("DEBUG:","currentid:"+id);
         vp.setCurrentItem(id);
     }
 }
