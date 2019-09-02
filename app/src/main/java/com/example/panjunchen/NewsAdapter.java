@@ -19,7 +19,7 @@ import com.example.panjunchen.models.News;
 import java.util.Date;
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<News> list;
     private Context _context;
 
@@ -35,7 +35,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemViewType(int position) {
         return list.get(position).getNewsType();
     }
-
 
 
     @NonNull
@@ -63,11 +62,20 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String info = publisher +"  "+time.toString()+ " " ;
         List<String> pic=list.get(position).getImageURL();
         String vid=list.get(position).getVideoURL();
+        long read=list.get(position).getReadtime().getTime();
+
 
         //如果单图文
         if (holder instanceof ViewHolder1) {
-            info+=" 0";
             ((ViewHolder1) holder).title.setText(title);
+            if (read != 0) {
+                ((ViewHolder1) holder).title.setTextColor(_context.getResources().getColor(R.color.read));
+            }
+            else
+            {
+                ((ViewHolder1) holder).title.setTextColor(_context.getResources().getColor(R.color.unread));
+            }
+
             ((ViewHolder1) holder).title.setTextSize(20);
             ((ViewHolder1) holder).info.setText(info);
             ((ViewHolder1) holder).info.setTextSize(10);
@@ -78,7 +86,13 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         if (holder instanceof ViewHolder2) {
-            info+=" 1";
+            if (read != 0) {
+                ((ViewHolder2) holder).title.setTextColor(_context.getResources().getColor(R.color.read));
+            }
+            else
+            {
+                ((ViewHolder2) holder).title.setTextColor(_context.getResources().getColor(R.color.unread));
+            }
             ((ViewHolder2) holder).title.setText(title);
             ((ViewHolder2) holder).title.setTextSize(20);
             ((ViewHolder2) holder).info.setText(info);
@@ -96,6 +110,13 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         if (holder instanceof ViewHolder3) {
             info+=" 2";
+            if (read != 0) {
+                ((ViewHolder3) holder).title.setTextColor(_context.getResources().getColor(R.color.read));
+            }
+            else
+            {
+                ((ViewHolder3) holder).title.setTextColor(_context.getResources().getColor(R.color.unread));
+            }
             ((ViewHolder3) holder).title.setText(title);
             ((ViewHolder3) holder).title.setTextSize(20);
             ((ViewHolder3) holder).info.setText(info);
@@ -104,6 +125,13 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         if (holder instanceof ViewHolder4) {
             info+=" 3";
+            if (read != 0) {
+                ((ViewHolder4) holder).title.setTextColor(_context.getResources().getColor(R.color.read));
+            }
+            else
+            {
+                ((ViewHolder4) holder).title.setTextColor(_context.getResources().getColor(R.color.unread));
+            }
             ((ViewHolder4) holder).title.setText(title);
             ((ViewHolder4) holder).title.setTextSize(20);
             ((ViewHolder4) holder).info.setText(info);

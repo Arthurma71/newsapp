@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+
 public class Fragment_log extends Fragment {
     private TextView textview;
     private TextView username;

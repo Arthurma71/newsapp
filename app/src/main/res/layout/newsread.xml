@@ -7,6 +7,14 @@
     tools:context=".MainActivity"
     >
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_read"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
     <ScrollView
         android:id="@+id/id_scrollView"
         android:layout_width="match_parent"
@@ -21,20 +29,26 @@
             android:paddingRight="20dp">
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/title_read"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/info_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/image_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:id="@+id/content_read"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Hello_world" />
         </LinearLayout>

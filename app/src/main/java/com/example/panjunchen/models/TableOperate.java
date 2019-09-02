@@ -316,7 +316,7 @@ public class TableOperate {
         return newsList;
     }
 
-    private News getNewsAt(int index)
+    public News getNewsAt(int index)
     {
         News temp = new News();
         String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_ID + "=" +index;
