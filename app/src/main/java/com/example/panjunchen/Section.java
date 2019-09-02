@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.panjunchen.models.News;
+import com.example.panjunchen.models.TableConfig;
 import com.example.panjunchen.models.TableOperate;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -176,6 +177,7 @@ public class Section extends Fragment {
             public void onItemClick(View view, int position) {
                 Intent intent=new Intent(getContext(),ReadActivity.class);
                 list.get(position).setReadtime(new Date());
+                TableOperate.getInstance().renewNews(list.get(position));
                 adapter.notifyDataSetChanged();
                 intent.putExtra("index",list.get(position).getDBindex());
                 startActivity(intent);
