@@ -176,11 +176,17 @@ public class Section extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent=new Intent(getContext(),ReadActivity.class);
-                list.get(position).setReadtime(new Date());
-                TableOperate.getInstance().renewNews(list.get(position));
-                adapter.notifyDataSetChanged();
-                intent.putExtra("index",list.get(position).getDBindex());
-                startActivity(intent);
+                try {
+                    list.get(position).setReadtime(new Date());
+                    TableOperate.getInstance().renewNews(list.get(position));
+                    adapter.notifyDataSetChanged();
+                    intent.putExtra("index", list.get(position).getDBindex());
+                    startActivity(intent);
+                }
+                catch(IndexOutOfBoundsException e)
+                {
+                    Log.d("DEBUG:","out of bound:"+position+" "+list.size());
+                }
             }
 
             @Override
