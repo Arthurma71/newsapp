@@ -102,10 +102,5 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
-        TableOperate.getInstance().getNewsFromServer("科技",10);
-        NewsAccount account = new NewsAccount("MWC","123456","http://shit.html");
-        TableOperate.getInstance().addNewAccount(account);
-        TableOperate.getInstance().changeAccountPassword(account,"shit2");
-        TableOperate.getInstance().reNewAccount(account);
     }
 }
