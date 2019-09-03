@@ -79,7 +79,4 @@ public class ReadActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.readmenu,menu);
         return true;
     }
-
-
-
 }

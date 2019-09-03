@@ -41,9 +41,11 @@ public class TableOperate {
         {
             File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
             File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
+            File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
             try{
                 Scanner scannerSH = new Scanner(searchHistoryFile);
                 Scanner scannerRL = new Scanner(recommendListFile);
+                //Scanner scannerA = new Scanner(accountFile);
 
                 int n = scannerRL.nextInt();
                 scannerRL.nextLine();
@@ -183,6 +185,11 @@ public class TableOperate {
         a.start();
         while(a.isAlive());
         return accountServerConnect.isSuccess;
+    }
+
+    public void clearHistory(){
+        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " +TableConfig.News.NEWS_READTIME+"=0";
+        db.execSQL(sql);
     }
 
     public boolean changeAccountPassword(NewsAccount newsAccount, String newPassword)
