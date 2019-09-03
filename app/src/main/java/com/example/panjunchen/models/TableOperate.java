@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -34,18 +36,14 @@ public class TableOperate {
         searchHistory = new ArrayList<>();
         recommendList = new HashMap<>();
 
-        currentNewsAccount = new NewsAccount("未登录","","");
-
         File file = new File(savePath + File.separator + "config");
         if(file.exists())
         {
             File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
             File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
-            File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
             try{
                 Scanner scannerSH = new Scanner(searchHistoryFile);
                 Scanner scannerRL = new Scanner(recommendListFile);
-                //Scanner scannerA = new Scanner(accountFile);
 
                 int n = scannerRL.nextInt();
                 scannerRL.nextLine();
@@ -71,7 +69,24 @@ public class TableOperate {
 
         }
 
-        Log.d("init","SHsize:"+searchHistory.size());
+        File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
+        if(accountFile.exists()){
+            try{
+                Scanner scannerA = new Scanner(accountFile);
+                String str = scannerA.nextLine();
+                JSONObject json = new JSONObject(str);
+                currentNewsAccount = new NewsAccount("未登录","","");
+                currentNewsAccount.setPassword(json.getString("PASSWORD"));
+                currentNewsAccount.setUsername(json.getString("ACCOUNT"));
+                currentNewsAccount.setImageURL(json.getString("URL"));
+            }catch (Exception e) {
+                Log.d("init", "accountLoadFail");
+                currentNewsAccount = new NewsAccount("未登录","","");
+            }
+        }
+        else{
+            currentNewsAccount = new NewsAccount("未登录","","");
+        }
     }
 
     public static TableOperate getInstance() {
@@ -92,6 +107,7 @@ public class TableOperate {
         file.mkdirs();
         File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
         File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
+        File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
         try {
             searchHistoryFile.createNewFile();
             recommendListFile.createNewFile();
@@ -111,6 +127,17 @@ public class TableOperate {
             }
             printStreamRL.close();
             printStreamSH.close();
+
+            if(!currentNewsAccount.getUsername().equals("未登录")){
+                accountFile.createNewFile();
+                PrintStream printStreamA = new PrintStream(savePath + File.separator + "config" + File.separator + "account.txt");
+                JSONObject json = new JSONObject();
+                json.put("PASSWORD",currentNewsAccount.getPassword());
+                json.put("ACCOUNT",currentNewsAccount.getUsername());
+                json.put("URL",currentNewsAccount.getImageURL());
+                printStreamA.println(json.toString());
+            }
+
         } catch (Exception e) {
             Log.d("Save","FileSave fail!");
         }
@@ -120,6 +147,14 @@ public class TableOperate {
         return currentNewsAccount;
     }
 
+    public boolean checkAccount(NewsAccount newsAccount){
+        AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword()," ", newsAccount.getImageURL(),"CHECK",new ArrayList<News>());
+        Thread a = new Thread(accountServerConnect);
+        a.start();
+        while(a.isAlive());
+        return accountServerConnect.isSuccess;
+    }
+
     public boolean addNewAccount(NewsAccount newsAccount)
     {
         AccountServerConnect accountServerConnect = new AccountServerConnect(newsAccount.getUsername(), newsAccount.getPassword()," ", newsAccount.getImageURL(),"NEW",new ArrayList<News>());
@@ -127,6 +162,23 @@ public class TableOperate {
         a.start();
         while(a.isAlive());
         return accountServerConnect.isSuccess;
+    }
+
+    public void updateLocalAccount(){
+        try{
+            File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
+            if(!currentNewsAccount.getUsername().equals("未登录")){
+                accountFile.createNewFile();
+                PrintStream printStreamA = new PrintStream(savePath + File.separator + "config" + File.separator + "account.txt");
+                JSONObject json = new JSONObject();
+                json.put("PASSWORD",currentNewsAccount.getPassword());
+                json.put("ACCOUNT",currentNewsAccount.getUsername());
+                json.put("URL",currentNewsAccount.getImageURL());
+                printStreamA.println(json.toString());
+            }
+        }catch (Exception e){
+            Log.d("saveLocalAccount","saveLocalFail");
+        }
     }
 
     public boolean loadAccount(NewsAccount newsAccount)
@@ -143,13 +195,16 @@ public class TableOperate {
             recommendList.clear();
             searchHistory.clear();
 
+            currentNewsAccount = newsAccount;
+            currentNewsAccount.setImageURL(accountServerConnect.imageURL);
+
             searchHistory = accountServerConnect.searchHistory;
+
+            updateLocalAccount();
 
             for (int i = 0;i < accountServerConnect.userNews.size();i ++) {
                 renewNews(accountServerConnect.userNews.get(i));
             }
-
-            currentNewsAccount = newsAccount;
 
             return true;
         }
@@ -507,7 +562,7 @@ public class TableOperate {
     protected void finalize()throws Throwable{
         try{
             quit();
-            if(!currentNewsAccount.getUsername().equals("未登录")) reNewAccount(currentNewsAccount);
+            //if(!currentNewsAccount.getUsername().equals("未登录")) reNewAccount(currentNewsAccount);
             super.finalize();
         }catch (Exception e){
             throw e;

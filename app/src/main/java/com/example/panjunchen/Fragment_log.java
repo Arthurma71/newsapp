@@ -31,7 +31,10 @@ import com.example.panjunchen.models.TableOperate;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -59,6 +62,7 @@ public class Fragment_log extends Fragment {
                 head.setImageBitmap(getBitmapFormUri(getActivity(), Uri.parse(currentAccount.getImageURL())));}
             catch (Exception e){
                 Log.d("updateAccount","imagefail");
+                e.printStackTrace();
             }
         }
         else head.setImageDrawable(getResources().getDrawable(R.drawable.defalthead));
@@ -121,6 +125,7 @@ public class Fragment_log extends Fragment {
         View view=inflater.inflate(R.layout.login,container,false);
         return view;
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -149,7 +154,7 @@ public class Fragment_log extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(),LoginActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -181,6 +186,42 @@ public class Fragment_log extends Fragment {
     }
     //弹出窗口向用户申请权限
 
+    public boolean copyFile(String oldPath$Name, String newPath$Name) {
+        try {
+            File oldFile = new File(oldPath$Name);
+            if (!oldFile.exists()) {
+                Log.e("--Method--", "copyFile:  oldFile not exist.");
+                return false;
+            } else if (!oldFile.isFile()) {
+                Log.e("--Method--", "copyFile:  oldFile not file.");
+                return false;
+            } else if (!oldFile.canRead()) {
+                Log.e("--Method--", "copyFile:  oldFile cannot read.");
+                return false;
+            }
+
+        /* 如果不需要打log，可以使用下面的语句
+        if (!oldFile.exists() || !oldFile.isFile() || !oldFile.canRead()) {
+            return false;
+        }
+        */
+
+            FileInputStream fileInputStream = new FileInputStream(oldPath$Name);    //读入原文件
+            FileOutputStream fileOutputStream = new FileOutputStream(newPath$Name);
+            byte[] buffer = new byte[1024];
+            int byteRead;
+            while ((byteRead = fileInputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, byteRead);
+            }
+            fileInputStream.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,7 +237,14 @@ public class Fragment_log extends Fragment {
                         Log.d("changeImage",newuri.toString());
                         currentAccount.setImageURL(newuri.toString());
                         updateAccount();
+                        TableOperate.getInstance().updateLocalAccount();
                     }
+                }
+                break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    currentAccount = TableOperate.getCurrentNewsAccount();
+                    updateAccount();
                 }
                 break;
         }

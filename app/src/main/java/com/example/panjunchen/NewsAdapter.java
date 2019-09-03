@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.panjunchen.models.News;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -59,7 +61,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         String title = list.get(position).getTitle();
         String publisher = list.get(position).getPublisher();
         Date time = list.get(position).getPublishtime();
-        String info = publisher +"  "+time.toString()+ " " ;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String info = publisher +"  "+df.format(time)+ " " ;
         List<String> pic=list.get(position).getImageURL();
         String vid=list.get(position).getVideoURL();
         long read=list.get(position).getReadtime().getTime();
@@ -109,7 +112,6 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return;
         }
         if (holder instanceof ViewHolder3) {
-            info+=" 2";
             if (read != 0) {
                 ((ViewHolder3) holder).title.setTextColor(_context.getResources().getColor(R.color.read));
             }

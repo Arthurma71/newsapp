@@ -42,7 +42,20 @@ public class AccountServerConnect implements Runnable {
             PrintWriter os=new PrintWriter(socket.getOutputStream());
             BufferedReader is=new BufferedReader( new InputStreamReader(socket.getInputStream()));
             Log.d("AccountServer","Connection OK");
-            if(operate.equals("GET"))
+            if(operate.equals("CHECK")){
+                JSONObject ask = new JSONObject();
+                ask.put("OPERATE","CHECK");
+                ask.put("ACCOUNT",username);
+                ask.put("PASSWORD",password);
+                Log.d("AccountServer",ask.toString());
+                os.println(ask.toString());
+                os.flush();
+
+                String ans = is.readLine();
+                if(ans.equals("OK"))isSuccess = true;
+                os.println("bye");
+            }
+            else if(operate.equals("GET"))
             {
                 JSONObject ask = new JSONObject();
                 ask.put("OPERATE","GET");
@@ -82,6 +95,7 @@ public class AccountServerConnect implements Runnable {
                     searchHistory = Arrays.asList(ar);
                 }
 
+                isSuccess = true;
                 os.println("bye");
             }
             else if(operate.equals("NEW"))
