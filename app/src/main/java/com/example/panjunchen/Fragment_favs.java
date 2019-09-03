@@ -11,6 +11,11 @@ import androidx.fragment.app.Fragment;
 
 public class Fragment_favs extends Fragment {
     private TextView textview;
+
+    public Fragment_favs(){
+        super();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.favread,container,false);

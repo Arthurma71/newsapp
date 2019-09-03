@@ -98,6 +98,10 @@ public class Section extends Fragment {
     private List<News> list = new ArrayList<News>();
     private TableOperate db;
     private int index;
+    public Section(){
+        super();
+    }
+
     public Section(String name)
     {
         super();

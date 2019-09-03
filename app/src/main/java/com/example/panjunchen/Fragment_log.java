@@ -16,6 +16,11 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 public class Fragment_log extends Fragment {
     private TextView textview;
     private TextView username;
+
+    public Fragment_log(){
+        super();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.login,container,false);

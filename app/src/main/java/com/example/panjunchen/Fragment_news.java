@@ -25,6 +25,11 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
     private TextView sections[];
     private LinearLayout liner;
     private ArrayList<Fragment> sectionpage;
+
+    public Fragment_news(){
+        super();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.newslist,container,false);
@@ -74,10 +79,12 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
             }
             text.setText(titles[i]);
             text.setId(i);
+            text.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             text.setOnClickListener(this);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(10,10,10,10);//设置左上右下四个margin值;
             liner.addView(text,layoutParams);
+            liner.setBackgroundColor(getResources().getColor(R.color.colorWhite));
             sections[i]=text;
         }
     }
