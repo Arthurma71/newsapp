@@ -249,7 +249,7 @@ public class TableOperate {
         String favorite;
         if(news.isIsfavorite())favorite = "1";
         else favorite = "0";
-        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_HASHCODE+"="+news.getHashcode();
+        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
         db.execSQL(sql);
         if(news.getReadtime().getTime() != 0) {
             Cursor c = db.rawQuery("Select * from " + TableConfig.Tags.TAGS_TABLE_NAME + " where " + TableConfig.Tags.TAGS_INDEX + "=" + news.getDBindex(), null);
