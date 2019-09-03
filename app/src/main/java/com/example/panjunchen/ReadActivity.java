@@ -1,7 +1,9 @@
 package com.example.panjunchen;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -26,6 +28,7 @@ public class ReadActivity extends AppCompatActivity {
     private TextView info;
     private TextView content;
     private ImageView img;
+    private Menu mMenu;
     private News news;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,25 @@ public class ReadActivity extends AppCompatActivity {
                 {
                     case R.id.action_share:
                     {
+                        break;
+                    }
+                    case R.id.action_like:
+                    {
+                        if(news.isIsfavorite())
+                        {
+                            Log.d("DEBUG:","unliked");
+                            news.setIsfavorite(0);
+                            TableOperate.getInstance().renewNews(news);
+
+                            menuItem.setIcon(R.drawable.unlike);
+                        }
+                        else
+                        {
+                            Log.d("DEBUG:","liked");
+                            news.setIsfavorite(1);
+                            TableOperate.getInstance().renewNews(news);
+                            menuItem.setIcon(R.drawable.like);
+                        }
                         break;
                     }
                 }
@@ -77,6 +99,17 @@ public class ReadActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.readmenu,menu);
+        mMenu=menu;
+        MenuItem like=mMenu.findItem(R.id.action_like);
+        if(news.isIsfavorite())
+        {
+            like.setIcon(R.drawable.like);
+        }
+        else
+        {
+            like.setIcon(R.drawable.unlike);
+        }
+
         return true;
     }
 

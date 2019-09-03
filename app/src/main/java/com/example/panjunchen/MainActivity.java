@@ -1,12 +1,14 @@
 package com.example.panjunchen;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -107,4 +109,13 @@ public class MainActivity extends AppCompatActivity {
         initfragment();
         TableOperate.init(getApplicationContext());
     }
+
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        Log.d("DEBUG","FUCK!");
+
+    }
+
 }

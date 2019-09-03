@@ -12,5 +12,12 @@
         android:title="分享"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_like"
+        android:icon="@drawable/unlike"
+        android:orderInCategory="90"
+        android:title="喜爱"
+        app:showAsAction="ifRoom" />
+
 
 </menu>
