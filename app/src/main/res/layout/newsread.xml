@@ -19,11 +19,12 @@
         android:id="@+id/id_scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@color/colorWhite">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
@@ -32,24 +33,28 @@
                 android:id="@+id/title_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
                 android:text="TextView" />
 
             <TextView
                 android:id="@+id/info_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
                 android:text="TextView" />
 
             <ImageView
                 android:id="@+id/image_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <TextView
                 android:id="@+id/content_read"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
                 android:text="@string/Hello_world" />
         </LinearLayout>
     </ScrollView>

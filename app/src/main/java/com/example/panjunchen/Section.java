@@ -98,6 +98,8 @@ public class Section extends Fragment {
     private RefreshLayout refresh;
     private List<News> list = new ArrayList<News>();
     private TableOperate db;
+    private int lastchanged=-1;
+    private int lastindex=-1;
     private int index;
     public Section(){
         super();
@@ -168,6 +170,10 @@ public class Section extends Fragment {
         db=TableOperate.getInstance();
         refresh=getView().findViewById(R.id.refreshLayout);
         list=db.getNewsFromLocal(secname,10,0);
+        if(list.size()==0)
+        {
+            list=db.getNewsFromServer(secname,10);
+        }
         index=list.size();
         adapter=new NewsAdapter(list,getContext());
         rv.setAdapter(adapter);
@@ -178,6 +184,8 @@ public class Section extends Fragment {
                 Intent intent=new Intent(getContext(),ReadActivity.class);
                 try {
                     list.get(position).setReadtime(new Date());
+                    lastindex=list.get(position).getDBindex();
+                    lastchanged=position;
                     TableOperate.getInstance().renewNews(list.get(position));
                     adapter.notifyDataSetChanged();
                     intent.putExtra("index", list.get(position).getDBindex());
@@ -198,5 +206,17 @@ public class Section extends Fragment {
         rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(lastchanged!=-1)
+        {
+            News n=list.get(lastchanged);
+            list.remove(lastchanged);
+            list.add(lastchanged,TableOperate.getInstance().getNewsAt(lastindex));
+        }
+        adapter.notifyDataSetChanged();
+    }
 
 }

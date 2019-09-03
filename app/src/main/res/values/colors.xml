@@ -5,7 +5,7 @@
     <color name="colorAccent">#D81B60</color>
     <color name="colorWhite">#FFFFFF</color>
 
-    <color name="unread">#000000</color>>
-    <color name="read">#6F6F6F</color>>
+    <color name="unread">#181818</color>>
+    <color name="read">#9B9B9B</color>>
 
 </resources>
