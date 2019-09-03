@@ -110,7 +110,6 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
             // 此方法是在状态改变的时候调用。
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 

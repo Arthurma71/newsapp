@@ -12,10 +12,13 @@
         <activity android:name="com.example.panjunchen.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity android:name="com.example.panjunchen.ReadActivity"
+            android:parentActivityName="com.example.panjunchen.MainActivity"/>
     </application>
 
 </manifest>

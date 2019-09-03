@@ -1,12 +1,17 @@
 package com.example.panjunchen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,9 +24,73 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Section extends Fragment{
+class SingleItemClickListener extends RecyclerView.SimpleOnItemTouchListener   {
+    private OnItemClickListener   clickListener;
+    private GestureDetectorCompat   gestureDetector;
+
+
+
+    public interface OnItemClickListener   {
+        void onItemClick(View   view, int position);
+        void onItemLongClick(View   view, int position);
+    }
+
+
+
+    public SingleItemClickListener(final RecyclerView   recyclerView,
+                             OnItemClickListener   listener) {
+        this.clickListener   = listener;
+        gestureDetector   = new GestureDetectorCompat(recyclerView.getContext(),
+                new   GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public   boolean onSingleTapUp(MotionEvent e) {
+                        View   childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                        if   (childView != null && clickListener != null) {
+                            clickListener.onItemClick(childView,   recyclerView.getChildAdapterPosition(childView));
+                        }
+                        return   true;
+                    }
+
+
+
+                    @Override
+
+                    public   void onLongPress(MotionEvent e) {
+
+                        View   childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
+
+                        if   (childView != null && clickListener != null) {
+
+                            clickListener.onItemLongClick(childView,
+
+                                    recyclerView.getChildAdapterPosition(childView));
+
+                        }
+
+                    }
+
+                });
+
+    }
+
+
+
+    @Override
+
+    public boolean onInterceptTouchEvent(RecyclerView   rv, MotionEvent e) {
+
+        gestureDetector.onTouchEvent(e);
+
+        return false;
+
+    }
+
+}
+
+public class Section extends Fragment {
     private String secname;
     private NewsAdapter adapter;
     private RecyclerView rv;
@@ -97,8 +166,25 @@ public class Section extends Fragment{
         index=list.size();
         adapter=new NewsAdapter(list,getContext());
         rv.setAdapter(adapter);
+        rv.addOnItemTouchListener(new SingleItemClickListener(rv, new SingleItemClickListener.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent=new Intent(getContext(),ReadActivity.class);
+                list.get(position).setReadtime(new Date());
+                adapter.notifyDataSetChanged();
+                intent.putExtra("index",list.get(position).getDBindex());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Log.d("DEBUG:","long click:"+position);
+            }
+        }));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
     }
+
 
 }

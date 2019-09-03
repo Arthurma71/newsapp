@@ -19,13 +19,16 @@
 
         <com.scwang.smartrefresh.header.DeliveryHeader
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
         </com.scwang.smartrefresh.header.DeliveryHeader>
 
         <com.scwang.smartrefresh.layout.footer.BallPulseFooter
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:srlAnimatingColor="@color/colorPrimary"
+            />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 

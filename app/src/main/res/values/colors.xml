@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#2979FF</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorWhite"></color>
+
+    <color name="unread">#000000</color>>
+    <color name="read">#6F6F6F</color>>
 </resources>
