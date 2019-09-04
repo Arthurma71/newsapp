@@ -21,7 +21,6 @@ public class AccountServerConnect implements Runnable {
     public String newPassword;
     public String imageURL;
     public String operate;
-    public List<String> searchHistory;
     public boolean isSuccess;
 
     public AccountServerConnect(String username,String password,String newPassword,String imageURL,String operate,ArrayList<News> userNews)
@@ -42,7 +41,20 @@ public class AccountServerConnect implements Runnable {
             PrintWriter os=new PrintWriter(socket.getOutputStream());
             BufferedReader is=new BufferedReader( new InputStreamReader(socket.getInputStream()));
             Log.d("AccountServer","Connection OK");
-            if(operate.equals("GET"))
+            if(operate.equals("CHECK")){
+                JSONObject ask = new JSONObject();
+                ask.put("OPERATE","CHECK");
+                ask.put("ACCOUNT",username);
+                ask.put("PASSWORD",password);
+                Log.d("AccountServer",ask.toString());
+                os.println(ask.toString());
+                os.flush();
+
+                String ans = is.readLine();
+                if(ans.equals("OK"))isSuccess = true;
+                os.println("bye");
+            }
+            else if(operate.equals("GET"))
             {
                 JSONObject ask = new JSONObject();
                 ask.put("OPERATE","GET");
@@ -54,34 +66,33 @@ public class AccountServerConnect implements Runnable {
 
                 JSONObject json = new JSONObject(is.readLine());
                 if(json.has("data")){
-                    JSONArray data = json.getJSONArray("data");
-                    for(int i = 0;i < data.length();i ++) {
-                        JSONObject newsjson = data.getJSONObject(i);
-                        News news = new News();
-                        news.setTitle(newsjson.getString("title"));
-                        news.setContent(newsjson.getString("content"));
-                        news.setPublisher(newsjson.getString("publisher"));
-                        news.setHashcode(newsjson.getString("newsID"));
-                        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                        news.setPublishtime(df.parse(newsjson.getString("publishTime")));
-                        news.setReadtime(df.parse(newsjson.getString("readTime")));
-                        news.setCategory(newsjson.getString("category"));
-                        news.setVideoURL(newsjson.getString("video"));
-                        news.setIsfavorite(newsjson.getInt("favorite"));
-                        String a = newsjson.getString("image");
-                        a = a.substring(1,a.length() - 1);
-                        String[] ar = a.split(", ");
-                        news.setImageURL(Arrays.asList(ar));
-                        userNews.add(news);
+                    if(!json.getString("data").equals("[]")) {
+                        JSONArray data = json.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject newsjson = data.getJSONObject(i);
+                            News news = new News();
+                            news.setTitle(newsjson.getString("title"));
+                            news.setContent(newsjson.getString("content"));
+                            news.setPublisher(newsjson.getString("publisher"));
+                            news.setHashcode(newsjson.getString("newsID"));
+                            DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            news.setPublishtime(df.parse(newsjson.getString("publishTime")));
+                            news.setReadtime(df.parse(newsjson.getString("readTime")));
+                            news.setCategory(newsjson.getString("category"));
+                            news.setVideoURL(newsjson.getString("video"));
+                            news.setIsfavorite(newsjson.getInt("favorite"));
+                            String a = newsjson.getString("image");
+                            a = a.substring(1, a.length() - 1);
+                            String[] ar = a.split(", ");
+                            news.setImageURL(Arrays.asList(ar));
+                            userNews.add(news);
+                        }
                     }
                 }
-                if(json.has("search")){
-                    String a = json.getString("search");
-                    a = a.substring(1,a.length() - 1);
-                    String[] ar = a.split(", ");
-                    searchHistory = Arrays.asList(ar);
-                }
 
+                imageURL = json.getString("URL");
+
+                isSuccess = true;
                 os.println("bye");
             }
             else if(operate.equals("NEW"))
@@ -112,7 +123,6 @@ public class AccountServerConnect implements Runnable {
                     strList.add(userNews.get(i).toJSONString());
                 }
                 ask.put("data",strList.toString());
-                ask.put("search",TableOperate.getInstance().getSearchHistory().toString());
                 Log.d("AccountServer",ask.toString());
                 os.println(ask.toString());
                 os.flush();

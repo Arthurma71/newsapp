@@ -26,7 +26,8 @@
             android:layout_height="80dp"
             android:layout_centerInParent="true"
             android:layout_centerVertical="false"
-            android:background="@drawable/head" />
+            android:background="@color/colorWhite"
+            tools:srcCompat="@tools:sample/avatars"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

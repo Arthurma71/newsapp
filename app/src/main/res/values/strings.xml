@@ -26,4 +26,5 @@
     <string name="my_channel">我的栏目</string>
     <string name="other_channel">其他栏目</string>
 
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

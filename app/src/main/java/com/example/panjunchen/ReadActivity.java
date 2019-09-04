@@ -112,7 +112,4 @@ public class ReadActivity extends AppCompatActivity {
 
         return true;
     }
-
-
-
 }

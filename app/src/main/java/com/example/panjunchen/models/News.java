@@ -24,7 +24,7 @@ public class News {
     private List<String> imageURL;
     private String videoURL;
 
-    News()
+    public News()
     {
         title = "this is a title";
         content = "this is a content";
