@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/register"
+                android:id="@+id/taphere"
                 android:text="Tap Here"
                 android:textColor="#636363"
                 android:textSize="15sp" />

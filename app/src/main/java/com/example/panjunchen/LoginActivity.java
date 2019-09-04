@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -22,6 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText username;
     private EditText password;
     private Button loginButton;
+    private TextView taphere;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,15 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.loginPassword);
 
         loginButton = findViewById(R.id.login);
+        taphere = findViewById(R.id.taphere);
+
+        taphere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 String a = username.getText().toString();
                 String b = password.getText().toString();
                 if(TableOperate.getInstance().checkAccount(new NewsAccount(a,b,""))){
-                    Toast toast=Toast.makeText(getApplicationContext(),"登录成功，等待同步",Toast.LENGTH_SHORT);
+                    Toast toast=Toast.makeText(getApplicationContext(),"登录成功",Toast.LENGTH_SHORT);
                     toast.show();
                     TableOperate.getInstance().loadAccount(new NewsAccount(a,b,""));
                     Intent intent = new Intent();

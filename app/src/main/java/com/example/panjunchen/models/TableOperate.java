@@ -25,7 +25,7 @@ public class TableOperate {
     private static TableOperate tableOperate;
     private static HashMap<String,Double> recommendList;
     private static List<String> searchHistory;
-    private static String savePath;
+    public static String savePath;
     private static NewsAccount currentNewsAccount;
     public static final String LIST_SEPARATOR = "Sep" + (char) 29;
 
@@ -104,7 +104,7 @@ public class TableOperate {
     public void quit()
     {
         File file = new File(savePath + File.separator + "config");
-        file.mkdirs();
+        if(!file.exists())file.mkdirs();
         File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
         File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
         File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
@@ -164,18 +164,17 @@ public class TableOperate {
         return accountServerConnect.isSuccess;
     }
 
-    public void updateLocalAccount(){
+    public void updateLocalAccount(NewsAccount newsAccount){
+        currentNewsAccount = newsAccount;
         try{
             File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
-            if(!currentNewsAccount.getUsername().equals("未登录")){
-                accountFile.createNewFile();
-                PrintStream printStreamA = new PrintStream(savePath + File.separator + "config" + File.separator + "account.txt");
-                JSONObject json = new JSONObject();
-                json.put("PASSWORD",currentNewsAccount.getPassword());
-                json.put("ACCOUNT",currentNewsAccount.getUsername());
-                json.put("URL",currentNewsAccount.getImageURL());
-                printStreamA.println(json.toString());
-            }
+            accountFile.createNewFile();
+            PrintStream printStreamA = new PrintStream(savePath + File.separator + "config" + File.separator + "account.txt");
+            JSONObject json = new JSONObject();
+            json.put("PASSWORD",currentNewsAccount.getPassword());
+            json.put("ACCOUNT",currentNewsAccount.getUsername());
+            json.put("URL",currentNewsAccount.getImageURL());
+            printStreamA.println(json.toString());
         }catch (Exception e){
             Log.d("saveLocalAccount","saveLocalFail");
         }
@@ -198,9 +197,7 @@ public class TableOperate {
             currentNewsAccount = newsAccount;
             currentNewsAccount.setImageURL(accountServerConnect.imageURL);
 
-            searchHistory = accountServerConnect.searchHistory;
-
-            updateLocalAccount();
+            updateLocalAccount(currentNewsAccount);
 
             for (int i = 0;i < accountServerConnect.userNews.size();i ++) {
                 renewNews(accountServerConnect.userNews.get(i));
@@ -311,8 +308,13 @@ public class TableOperate {
         String favorite;
         if(news.isIsfavorite())favorite = "1";
         else favorite = "0";
-        String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
-        db.execSQL(sql);
+        if(isinDB(news.getHashcode())) {
+            String sql = "UPDATE " + TableConfig.News.NEWS_TABLE_NAME + " SET " + TableConfig.News.NEWS_FAVORITE +"="+favorite+", "+TableConfig.News.NEWS_READTIME+"="+news.getReadtime().getTime()+" WHERE "+TableConfig.News.NEWS_ID+"="+news.getDBindex();
+            db.execSQL(sql);
+        }
+        else{
+            addNews(news);
+        }
         if(news.getReadtime().getTime() != 0) {
             Cursor c = db.rawQuery("Select * from " + TableConfig.Tags.TAGS_TABLE_NAME + " where " + TableConfig.Tags.TAGS_INDEX + "=" + news.getDBindex(), null);
             while(c.moveToNext()) {
