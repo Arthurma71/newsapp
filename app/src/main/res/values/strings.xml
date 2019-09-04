@@ -21,4 +21,9 @@
     <string name="technology">科技</string>
     <string name="society">社会</string>
     <string name="recommand">推荐</string>
+    <string name="finish">完成</string>
+    <string name="edit">编辑</string>
+    <string name="my_channel">我的栏目</string>
+    <string name="other_channel">其他栏目</string>
+
 </resources>

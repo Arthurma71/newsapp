@@ -1,12 +1,16 @@
 package com.example.panjunchen;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.HorizontalScrollView;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.widget.LinearLayout;
@@ -14,18 +18,23 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.panjunchen.models.NewsChannelBean;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
-public class Fragment_news extends Fragment implements View.OnClickListener  {
-    private HorizontalScrollView hs;
+public class Fragment_news extends Fragment  {
+
     private ViewPager vp;
     private String[] titles;
     private TextView sections[];
-    private LinearLayout liner;
+    private TabLayout tabs;
     private ArrayList<Fragment> sectionpage;
-
+    private Button b;
+    private int[] mylist;
     public Fragment_news(){
         super();
     }
@@ -38,12 +47,22 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        hs=getActivity().findViewById(R.id.sectionscroll);
+        tabs=getActivity().findViewById(R.id.tabsview);
         vp=getActivity().findViewById(R.id.viewpager);
-        liner=getActivity().findViewById(R.id.sectionnav);
+        b=getActivity().findViewById(R.id.button);
         sectionpage=new ArrayList<Fragment>();
+        mylist=new int[]{0,1,2,3,4};
         titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
-        inittext();
+        b.setOnClickListener(view -> {
+            Intent intent=new Intent(getContext(),NewsChannelActivity.class);
+            Bundle bund=new Bundle();
+            bund.putIntArray("enablelist",mylist);
+            intent.putExtras(bund);
+            startActivityForResult(intent,0);
+
+        });
+
+
 
         for(int i=0;i<titles.length;i++)
         {
@@ -52,81 +71,47 @@ public class Fragment_news extends Fragment implements View.OnClickListener  {
         }
 
 
-        vp.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+        vp.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 Log.d("DEBUG:","my position:"+position);
-                return sectionpage.get(position);
+                return sectionpage.get(mylist[position]);
             }
 
             @Override
             public int getCount() {
-                return titles.length;
+                return mylist.length;
             }
-        });
-        setOnClickListener();
-    }
 
-    private void inittext() {
-        sections=new TextView[titles.length];
-        for(int i=0;i<titles.length;i++)
-        {
-            TextView text=new TextView(getActivity());
-            text.setText(titles[i]);
-            text.setTextSize(25);
-            if (i == 0) {
-                text.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            }
-            text.setText(titles[i]);
-            text.setId(i);
-            text.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            text.setOnClickListener(this);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(10,10,10,10);//设置左上右下四个margin值;
-            liner.addView(text,layoutParams);
-            liner.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-            sections[i]=text;
-        }
-    }
-
-    private void setOnClickListener() {
-        vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            //当页面在滑动的时候会调用此方法，在滑动被停止之前，此方法回一直被调用。
+            @Nullable
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public CharSequence getPageTitle(int position) {
 
+                return titles[mylist[position]];
             }
 
-            // 此方法是页面跳转完后被调用
             @Override
-            public void onPageSelected(int position) {
-                for (int i = 0; i < titles.length; i++) {
-                    if (i == position) {
-                        sections[i].setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                    } else {
-                        sections[i].setTextColor(Color.GRAY);
-                    }
-
-                }
-                // 标题滑动功能
-                int width = sections[position].getWidth();
-                int totalWidth = (width + 20) * position;
-                hs.smoothScrollTo(totalWidth, 0);
-            }
-
-            // 此方法是在状态改变的时候调用。
-            @Override
-            public void onPageScrollStateChanged(int state) {
+            public int getItemPosition(@NonNull Object object) {
+                return POSITION_NONE;
             }
         });
 
+        tabs.setupWithViewPager(vp);
 
     }
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        Log.d("DEBUG:","currentid:"+id);
-        vp.setCurrentItem(id);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==0)
+        {
+            if(resultCode==1){
+                Bundle bund=data.getExtras();
+                mylist=bund.getIntArray("mylist");
+                vp.getAdapter().notifyDataSetChanged();
+                tabs.setupWithViewPager(vp);
+
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.panjunchen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 class SingleItemClickListener extends RecyclerView.SimpleOnItemTouchListener   {
     private OnItemClickListener   clickListener;
@@ -130,16 +133,22 @@ public class Section extends Fragment {
         init();
         refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
+            public void onRefresh(final RefreshLayout refreshlayout) {
                 Log.d("DEBUG:","refresh:"+secname);
+                Handler mHandler=new Handler();
                 List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
                 for(int i=0;i<k.size();i++)
                 {
                     list.add(0 ,k.get(i));
                 }
-                adapter.notifyDataSetChanged();
-                index=10;
-                refreshlayout.finishRefresh();
+                refreshlayout.finishRefresh(1000);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        index=10;
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
         refresh.setOnLoadMoreListener(new OnLoadMoreListener() {

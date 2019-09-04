@@ -7,5 +7,6 @@
 
     <color name="unread">#181818</color>>
     <color name="read">#9B9B9B</color>>
+    <color name="half_transparent">#80FFFFFF</color>
 
 </resources>
