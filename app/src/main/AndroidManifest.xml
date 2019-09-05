@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChangeActivity"></activity>
+        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".ChangeActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -22,9 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.example.panjunchen.NewsChannelActivity"
-            android:parentActivityName="com.example.panjunchen.MainActivity"/>
+        <activity
+            android:name=".NewsChannelActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ReadActivity"
             android:parentActivityName=".MainActivity" />

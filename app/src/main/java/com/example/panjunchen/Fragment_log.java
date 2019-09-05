@@ -236,6 +236,14 @@ public class Fragment_log extends Fragment {
                 TableOperate.getInstance().clearHistory();
             }
         });
+
+        history_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     //检查权限
