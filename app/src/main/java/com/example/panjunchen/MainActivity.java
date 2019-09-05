@@ -9,8 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
@@ -100,6 +103,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
+        News videocheck = new News();
+        videocheck.setHashcode("123456");
+        videocheck.setIsfavorite(1);
+        videocheck.setVideoURL("https://key002.ku6.com/xy/d7b3278e106341908664638ac5e92802.mp4");
+        videocheck.setContent("videocheck");
+        videocheck.setImageURL(new ArrayList<>());
+        videocheck.setTitle("追龙");
+        videocheck.setTag(new ArrayList<>());
+        videocheck.setCategory("娱乐");
+        if(!TableOperate.getInstance().isinDB(videocheck.getHashcode()))TableOperate.getInstance().addNews(videocheck);
+        News videocheck2 = new News();
+        videocheck2.setHashcode("456789");
+        videocheck2.setIsfavorite(1);
+        videocheck2.setVideoURL("https://www.w3schools.com/html/movie.mp4");
+        videocheck2.setContent("videocheck");
+        videocheck2.setImageURL(new ArrayList<>());
+        videocheck2.setTitle("熊");
+        videocheck2.setTag(new ArrayList<>());
+        videocheck2.setCategory("娱乐");
+        if(!TableOperate.getInstance().isinDB(videocheck2.getHashcode()))TableOperate.getInstance().addNews(videocheck2);
     }
 
     @Override

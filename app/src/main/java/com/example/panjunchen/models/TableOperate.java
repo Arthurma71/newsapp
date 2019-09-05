@@ -2,6 +2,7 @@ package com.example.panjunchen.models;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -28,6 +29,7 @@ public class TableOperate {
     public static String savePath;
     private static NewsAccount currentNewsAccount;
     public static final String LIST_SEPARATOR = "Sep" + (char) 29;
+    public static List<Integer> tabList;
 
     public static void init(Context context) {
         tableOperate = new TableOperate(context);
@@ -38,6 +40,7 @@ public class TableOperate {
 
         File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
         File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
+        File tabListFile = new File(savePath + File.separator + "config" + File.separator + "tabList.txt");
         if(recommendListFile.exists()){
             try{
                 Scanner scannerSH = new Scanner(searchHistoryFile);
@@ -66,6 +69,28 @@ public class TableOperate {
             }
             for (Map.Entry<String,Double> a:recommendList.entrySet()){
                 Log.d("recommendList",a.getKey()+" "+a.getValue());
+            }
+        }
+
+        if(tabListFile.exists()){
+            try{
+                tabList = new ArrayList<>();
+                Scanner scannerT = new Scanner(tabListFile);
+                int n = scannerT.nextInt();
+                for(int i = 0;i < n;i ++){
+                    tabList.add(scannerT.nextInt());
+                }
+            }catch (Exception e) {
+                Log.d("init", "tabListLoadFail");
+                for(int i = 1;i < 5;i ++){
+                    tabList.add(i);
+                }
+            }
+        }
+        else {
+            tabList = new ArrayList<>();
+            for(int i = 1;i < 5;i ++){
+                tabList.add(i);
             }
         }
 
@@ -516,6 +541,33 @@ public class TableOperate {
 
         for(int i = 0;i < indexList.size();i ++){
             db.execSQL("delete from " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_ID + "=" + indexList.get(i));
+        }
+    }
+
+    public List<Integer> getTabList(){
+        return tabList;
+    }
+
+    public void renewTabList(List<Integer> list){
+        tabList.clear();
+        for(int i = 0;i < list.size();i ++){
+            tabList.add(list.get(i));
+        }
+        File file = new File(savePath + File.separator + "config");
+        if(!file.exists())file.mkdirs();
+        File tabListFile = new File(savePath+File.separator+"config"+File.separator+"tabList.txt");
+        try {
+            tabListFile.createNewFile();
+            PrintStream printStreamSH = new PrintStream(savePath+File.separator+"config"+File.separator+"tabList.txt");
+
+            printStreamSH.println(tabList.size());
+            for(Integer a: tabList)
+            {
+                printStreamSH.println(a);
+            }
+            printStreamSH.close();
+        } catch (Exception e) {
+            Log.d("Save","FileSave fail!");
         }
     }
 

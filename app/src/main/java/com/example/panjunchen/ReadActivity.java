@@ -1,12 +1,17 @@
 package com.example.panjunchen;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 
 import androidx.appcompat.app.ActionBar;
@@ -17,7 +22,11 @@ import com.bumptech.glide.Glide;
 import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 
+import java.io.IOException;
 import java.util.List;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 import static android.view.View.GONE;
 
@@ -29,6 +38,8 @@ public class ReadActivity extends AppCompatActivity {
     private ImageView img;
     private Menu mMenu;
     private News news;
+    private JCVideoPlayerStandard playerStandard2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +52,18 @@ public class ReadActivity extends AppCompatActivity {
         info=findViewById(R.id.info_read);
         content=findViewById(R.id.content_read);
         img=findViewById(R.id.image_read);
+        playerStandard2 = (JCVideoPlayerStandard) findViewById(R.id.playerstandard2);
+
+        Log.d("video",news.getVideoURL());
+
+        if(news.getVideoURL().equals("")){
+            playerStandard2.setVisibility(GONE);
+        }
+        else{
+            playerStandard2.setUp(news.getVideoURL(),JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL,"视频");
+            playerStandard2.startVideo();
+        }
+
         setSupportActionBar(tb);
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
@@ -92,6 +115,15 @@ public class ReadActivity extends AppCompatActivity {
         else
         {
             img.setVisibility(GONE);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            JCVideoPlayer.releaseAllVideos();
+        } catch (Exception e) {
         }
     }
 
