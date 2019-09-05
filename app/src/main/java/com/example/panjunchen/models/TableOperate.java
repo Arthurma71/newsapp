@@ -581,7 +581,7 @@ public class TableOperate {
         if(!searchHistory.contains(keyword))searchHistory.add(keyword);
 
         ArrayList<News> newsList = new ArrayList<>();
-        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_CONTENT + " like '%" + keyword + "%'" +" ORDER BY " + TableConfig.News.NEWS_ID + " DESC";
+        String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_TITLE + " like '%" + keyword + "%'" +" ORDER BY " + TableConfig.News.NEWS_ID + " DESC";
         Cursor c = db.rawQuery(sql, null);
         c.move(index);
         while (c.moveToNext()&&count!=0) {

@@ -8,7 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -36,6 +38,7 @@ public class ReadActivity extends AppCompatActivity {
     private TextView info;
     private TextView content;
     private ImageView img;
+    private LinearLayout group;
     private Menu mMenu;
     private News news;
     private JCVideoPlayerStandard playerStandard2;
@@ -51,7 +54,7 @@ public class ReadActivity extends AppCompatActivity {
         title=findViewById(R.id.title_read);
         info=findViewById(R.id.info_read);
         content=findViewById(R.id.content_read);
-        img=findViewById(R.id.image_read);
+
         playerStandard2 = (JCVideoPlayerStandard) findViewById(R.id.playerstandard2);
 
         Log.d("video",news.getVideoURL());
@@ -108,13 +111,17 @@ public class ReadActivity extends AppCompatActivity {
         info.setText(inf);
         info.setTextSize(10);
         List<String> pic=news.getImageURL();
-        if(pic.size()>0) {
-            Glide.with(this).load(pic.get(0))
+
+        group = findViewById(R.id.LinearOperate);
+
+        for(int i = 0;i < pic.size();i ++){
+            img=new ImageView(this);
+            Glide.with(this).load(pic.get(i))
                     .into(img);
-        }
-        else
-        {
-            img.setVisibility(GONE);
+            group.addView(img,2);
+            LinearLayout layout = new LinearLayout(this);
+            layout.setMinimumHeight(10);
+            group.addView(layout,2);
         }
     }
 

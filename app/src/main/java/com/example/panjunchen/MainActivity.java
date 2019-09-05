@@ -14,6 +14,7 @@ import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     {
         FragmentTransaction transaction =getSupportFragmentManager().beginTransaction();
         transaction.hide(fragments[lastfragment]);//隐藏上个Fragment
+        JCVideoPlayer.releaseAllVideos();
         if(!fragments[newfragment].isAdded())
         {
             transaction.add(R.id.mainview,fragments[newfragment]);
@@ -125,6 +127,16 @@ public class MainActivity extends AppCompatActivity {
         videocheck2.setTag(new ArrayList<>());
         videocheck2.setCategory("娱乐");
         if(!TableOperate.getInstance().isinDB(videocheck2.getHashcode()))TableOperate.getInstance().addNews(videocheck2);
+        News videocheck3 = new News();
+        videocheck3.setHashcode("4567890");
+        videocheck3.setIsfavorite(1);
+        videocheck3.setVideoURL("https://vd3.bdstatic.com/mda-jdbay4t6c08x3i8j/sc/mda-jdbay4t6c08x3i8j.mp4?auth_key=1567689110-0-0-3e93c7d72f4fc529c53f1a51abdc50f9&bcevod_channel=searchbox_feed&pd=bjh&abtest=all");
+        videocheck3.setContent("videocheck");
+        videocheck3.setImageURL(new ArrayList<>());
+        videocheck3.setTitle("复联");
+        videocheck3.setTag(new ArrayList<>());
+        videocheck3.setCategory("娱乐");
+        if(!TableOperate.getInstance().isinDB(videocheck3.getHashcode()))TableOperate.getInstance().addNews(videocheck3);
     }
 
     @Override
