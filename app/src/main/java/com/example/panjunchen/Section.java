@@ -227,6 +227,19 @@ public class Section extends Fragment {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden){
+        JCVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        JCVideoPlayer.releaseAllVideos();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
