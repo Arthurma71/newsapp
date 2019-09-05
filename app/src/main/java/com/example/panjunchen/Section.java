@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.panjunchen.models.News;
-import com.example.panjunchen.models.TableConfig;
 import com.example.panjunchen.models.TableOperate;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -121,7 +119,7 @@ public class Section extends Fragment {
         {
             rv.setAdapter(adapter);
         }
-        View view=inflater.inflate(R.layout.section,container,false);
+        View view=inflater.inflate(R.layout.fragment_section,container,false);
         return view;
     }
 
@@ -155,7 +153,16 @@ public class Section extends Fragment {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
 
-                List<News> k = TableOperate.getInstance().getNewsFromLocal(secname, 10, index);
+                List<News> k;
+
+                if(secname=="推荐")
+                {
+                    k=TableOperate.getInstance().getRecommend(10,index);
+                }
+                else
+                {
+                    k= TableOperate.getInstance().getNewsFromLocal(secname, 10, index);
+                }
                 if(k.size()==0)
                 {
                     refreshlayout.finishLoadMoreWithNoMoreData();
@@ -177,7 +184,7 @@ public class Section extends Fragment {
     private void init() {
         rv=getView().findViewById(R.id.newslist);
         db=TableOperate.getInstance();
-        refresh=getView().findViewById(R.id.refreshLayout);
+        refresh=getView().findViewById(R.id.refresh);
         list=db.getNewsFromLocal(secname,10,0);
         if(list.size()==0)
         {

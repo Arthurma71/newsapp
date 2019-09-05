@@ -1,6 +1,5 @@
 package com.example.panjunchen;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,7 +32,7 @@ public class ReadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.newsread);
+        setContentView(R.layout.activity_newsread);
         Intent intent = getIntent();
         int mynews = intent.getIntExtra("index",0);
         news= TableOperate.getInstance().getNewsAt(mynews);
