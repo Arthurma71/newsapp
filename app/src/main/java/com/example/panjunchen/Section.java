@@ -135,20 +135,22 @@ public class Section extends Fragment {
             @Override
             public void onRefresh(final RefreshLayout refreshlayout) {
                 Log.d("DEBUG:","refresh:"+secname);
-                Handler mHandler=new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
-                        for(int i=0;i<k.size();i++)
-                        {
-                            list.add(0 ,k.get(i));
-                        }
-                        index=10;
-                        adapter.notifyDataSetChanged();
-                        refreshlayout.finishRefresh(1000);
-                    }
-                });
+                List<News> k;
+                if(secname.equals("推荐"))
+                {
+                    k=TableOperate.getInstance().getRecommendFromServer(10);
+                }
+                else
+                {
+                    k= TableOperate.getInstance().getNewsFromServer(secname, 10);
+                }
+                for(int i=0;i<k.size();i++)
+                {
+                    list.add(0 ,k.get(i));
+                }
+                index=10;
+                adapter.notifyDataSetChanged();
+                refreshlayout.finishRefresh();
             }
         });
         refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -157,9 +159,9 @@ public class Section extends Fragment {
 
                 List<News> k;
 
-                if(secname=="推荐")
+                if(secname.equals("推荐"))
                 {
-                    k=TableOperate.getInstance().getRecommendFromServer(10);
+                    k=new ArrayList<>();
                 }
                 else
                 {
@@ -187,9 +189,14 @@ public class Section extends Fragment {
         rv = getView().findViewById(R.id.newslist);
         db = TableOperate.getInstance();
         refresh = getView().findViewById(R.id.refresh);
-        list = db.getNewsFromLocal(secname, 10, 0);
-        if (list.size() == 0) {
-            list = db.getNewsFromServer(secname, 10);
+        if(secname.equals("推荐")){
+            list = db.getRecommendFromServer(10);
+        }
+        else{
+            list = db.getNewsFromLocal(secname, 10, 0);
+            if (list.size() == 0) {
+                list = db.getNewsFromServer(secname, 10);
+            }
         }
         index = list.size();
         adapter = new NewsAdapter(list, getContext());

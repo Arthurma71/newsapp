@@ -157,14 +157,14 @@ public class NewsChannelActivity extends AppCompatActivity{
 
 
     private void initData() {
-        String[] tit=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
+        String[] tit=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车","推荐"};
         titles=new ArrayList<String>();
         for(int i=0;i<tit.length;i++)
         {
             titles.add(tit[i]);
         }
-        isactive=new boolean[9];
-        for(int i=0;i<9;i++)
+        isactive=new boolean[10];
+        for(int i=0;i<10;i++)
         {
             isactive[i]=false;
         }
