@@ -48,13 +48,15 @@ public class Fragment_news extends Fragment  {
         sectionpage=new ArrayList<Fragment>();
         mylist=new int[]{0,1,2,3,4};
         titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
-        b.setOnClickListener(view -> {
-            Intent intent=new Intent(getContext(),NewsChannelActivity.class);
-            Bundle bund=new Bundle();
-            bund.putIntArray("enablelist",mylist);
-            intent.putExtras(bund);
-            startActivityForResult(intent,0);
-
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(getContext(),NewsChannelActivity.class);
+                Bundle bund=new Bundle();
+                bund.putIntArray("enablelist",mylist);
+                intent.putExtras(bund);
+                startActivityForResult(intent,0);
+            }
         });
 
 

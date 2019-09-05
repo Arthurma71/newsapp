@@ -157,7 +157,7 @@ public class Section extends Fragment {
 
                 if(secname=="推荐")
                 {
-                    k=TableOperate.getInstance().getRecommend(10,index);
+                    k=TableOperate.getInstance().getRecommendFromServer(10);
                 }
                 else
                 {
