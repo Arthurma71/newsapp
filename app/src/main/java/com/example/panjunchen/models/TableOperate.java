@@ -88,6 +88,7 @@ public class TableOperate {
             }
         }
         else {
+            tabList = new ArrayList<>();
             for(int i = 1;i < 5;i ++){
                 tabList.add(i);
             }

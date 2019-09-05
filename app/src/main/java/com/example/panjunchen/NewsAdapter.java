@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+
 public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<News> list;
     private Context _context;
@@ -138,6 +140,8 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             ((ViewHolder4) holder).title.setTextSize(20);
             ((ViewHolder4) holder).info.setText(info);
             ((ViewHolder4) holder).info.setTextSize(8);
+            ((ViewHolder4) holder).video.setUp(vid,JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL,"视频");
+            ((ViewHolder4) holder).video.startVideo();
             return;
         }
     }
@@ -192,13 +196,13 @@ class ViewHolder3 extends RecyclerView.ViewHolder {
 
 class ViewHolder4 extends RecyclerView.ViewHolder {
     TextView title;//标题
-    VideoView video;
+    JCVideoPlayerStandard video;
     TextView info;//多图文模式的新闻作者
 
    ViewHolder4(View itemView) {
         super(itemView);
         title =  itemView.findViewById(R.id.title_04);
-        video= itemView.findViewById(R.id.video_04);
+        video= itemView.findViewById(R.id.playerstandard);
         info = itemView.findViewById(R.id.info_04);
     }
 }
