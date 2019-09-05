@@ -17,12 +17,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.tabs.TabLayout;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fragment_news extends Fragment  {
 
@@ -32,8 +36,8 @@ public class Fragment_news extends Fragment  {
     private TabLayout tabs;
     private ArrayList<Fragment> sectionpage;
     private Button b;
-    MaterialSearchBar searchBar;
-    private ListView historylist;
+    private MaterialSearchBar searchBar;
+    private List<String> historylist;
     private int[] mylist;
     public Fragment_news(){
         super();
@@ -51,9 +55,30 @@ public class Fragment_news extends Fragment  {
         tabs=getActivity().findViewById(R.id.tabsview);
         vp=getActivity().findViewById(R.id.viewpager);
         b=getActivity().findViewById(R.id.button);
+        historylist= TableOperate.getInstance().getSearchHistory();
         sectionpage=new ArrayList<Fragment>();
         mylist=new int[]{0,1,2,3,4};
         titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
+        searchBar.setHint("Search...");
+        searchBar.setLastSuggestions(historylist);
+
+        searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
+
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+
+            }
+
+            @Override
+            public void onButtonClicked(int buttonCode) {
+
+            }
+        });
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

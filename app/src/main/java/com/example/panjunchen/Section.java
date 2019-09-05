@@ -232,9 +232,16 @@ public class Section extends Fragment {
         super.onResume();
         if(lastchanged!=-1)
         {
-            News n=list.get(lastchanged);
-            list.remove(lastchanged);
-            list.add(lastchanged,TableOperate.getInstance().getNewsAt(lastindex));
+            try {
+                News n=list.get(lastchanged);
+                list.remove(lastchanged);
+                list.add(lastchanged,TableOperate.getInstance().getNewsAt(lastindex));
+            }
+            catch(IndexOutOfBoundsException e)
+            {
+                Log.d("DEBUG:","out of bound:");
+            }
+
         }
         adapter.notifyDataSetChanged();
     }
