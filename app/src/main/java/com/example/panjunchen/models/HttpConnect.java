@@ -23,6 +23,8 @@ public class HttpConnect implements Runnable
     public Integer total;
     public int count;
     public String category;
+    public String keywords;
+    public boolean isfail;
 
     public void run()
     {
@@ -36,6 +38,7 @@ public class HttpConnect implements Runnable
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 String a;
                 if(!category.equals(""))a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date())+"&categories="+category;
+                else if(!keywords.equals("")) a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date())+"&words="+keywords;
                 else a = "https://api2.newsminer.net/svc/news/queryNewsList?size="+trycount+"&endDate="+df.format(new Date());
                 Log.d("http",a);
                 URL url = new URL(a);
@@ -100,13 +103,19 @@ public class HttpConnect implements Runnable
             {
                 Log.d("JSON","shitJSON");
             }
+            if(trycount > 4000)
+            {
+                isfail = true;
+                break;
+            }
         }
     }
 
-    HttpConnect(String category,int count)
+    HttpConnect(String category,int count,String keywords)
     {
         ans = new ArrayList<News>();
         pageSize = new Integer(0);
+        this.keywords = keywords;
         total = new Integer(0);
         this.category = category;
         this.count = count;
