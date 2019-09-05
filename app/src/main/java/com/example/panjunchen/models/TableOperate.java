@@ -36,11 +36,9 @@ public class TableOperate {
         searchHistory = new ArrayList<>();
         recommendList = new HashMap<>();
 
-        File file = new File(savePath + File.separator + "config");
-        if(file.exists())
-        {
-            File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
-            File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
+        File searchHistoryFile = new File(savePath + File.separator + "config" + File.separator + "searchhistory.txt");
+        File recommendListFile = new File(savePath + File.separator + "config" + File.separator + "recommendlist.txt");
+        if(recommendListFile.exists()){
             try{
                 Scanner scannerSH = new Scanner(searchHistoryFile);
                 Scanner scannerRL = new Scanner(recommendListFile);
@@ -66,7 +64,9 @@ public class TableOperate {
             {
                 Log.d("init","FileRead fail!");
             }
-
+            for (Map.Entry<String,Double> a:recommendList.entrySet()){
+                Log.d("recommendList",a.getKey()+" "+a.getValue());
+            }
         }
 
         File accountFile = new File(savePath + File.separator + "config" + File.separator + "account.txt");
@@ -327,11 +327,12 @@ public class TableOperate {
                 else recommendList.put(word,score);
             }
         }
+        quit();
     }
 
     public List<News> getNewsFromServer(String category,int count)
     {
-        HttpConnect httpConnect = new HttpConnect(category,count);
+        HttpConnect httpConnect = new HttpConnect(category,count,"");
         Thread a = new Thread(httpConnect);
         a.start();
         while(a.isAlive());
@@ -405,7 +406,7 @@ public class TableOperate {
         return temp;
     }
 
-    public List<News> getRecommend(int count,int index)
+    public List<News> getRecommendFromServer(int count)
     {
         List<News> newsList = new ArrayList<>();
 
@@ -417,29 +418,23 @@ public class TableOperate {
             }
         });
 
-        List<Integer> numList = new ArrayList<>();
-        int indexNow = 0;
+        for(int i = 0;i < list.size();i ++){
+            HttpConnect httpConnect = new HttpConnect("",count,list.get(i).getKey());
+            Thread a = new Thread(httpConnect);
+            a.start();
+            while(a.isAlive());
 
-        for (Map.Entry<String, Double> mapping : list) {
-            System.out.println(mapping.getKey() + ":" + mapping.getValue());
-            String sql = "SELECT * FROM " + TableConfig.Tags.TAGS_TABLE_NAME + " WHERE " + TableConfig.Tags.TAGS_TAG + " = '" + mapping.getKey() + "'";
-            Cursor c = db.rawQuery(sql, null);
-            while (c.moveToNext()) {
-                if(numList.contains(c.getInt(1)))continue;
-                if(indexNow >= index) {
-                    newsList.add(getNewsAt(c.getInt(1)));
-                    count --;
-                    if(count == 0)break;
-                }
-                numList.add(c.getInt(1));
-                indexNow ++;
-            }
-            c.close();
+            count -= httpConnect.ans.size();
+            newsList.addAll(httpConnect.ans);
+            if(count == 0)break;
         }
 
-        if(count != 0) {
-            List<News> more = getNewsFromServer("",count);
-            newsList.addAll(more);
+        if(count != 0){
+            HttpConnect httpConnect = new HttpConnect("",count,"");
+            Thread a = new Thread(httpConnect);
+            a.start();
+            while(a.isAlive());
+            newsList.addAll(httpConnect.ans);
         }
 
         return newsList;
