@@ -25,6 +25,9 @@
 
         <activity android:name="com.example.panjunchen.NewsChannelActivity"
             android:parentActivityName="com.example.panjunchen.MainActivity"/>
+
+        <activity android:name="com.example.panjunchen.SearchActivity"
+            android:parentActivityName="com.example.panjunchen.MainActivity"/>
         <activity
             android:name=".ReadActivity"
             android:parentActivityName=".MainActivity" />

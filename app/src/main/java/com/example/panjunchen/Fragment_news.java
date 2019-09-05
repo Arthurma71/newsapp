@@ -2,7 +2,9 @@ package com.example.panjunchen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +25,50 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.tabs.TabLayout;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.mancj.materialsearchbar.adapter.DefaultSuggestionsAdapter;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
+
+class SuggestionHolder extends RecyclerView.ViewHolder{
+    protected TextView title;
+
+    public SuggestionHolder(View itemView) {
+        super(itemView);
+        title = (TextView) itemView.findViewById(R.id.history);
+    }
+}
+
+class CustomSuggestionsAdapter extends SuggestionsAdapter<String, SuggestionHolder> {
+    CustomSuggestionsAdapter(LayoutInflater inflater)
+    {
+        super(inflater);
+
+    }
+
+
+    @Override
+    public void onBindSuggestionHolder(String suggestion, SuggestionHolder holder, int position) {
+        holder.title.setText(suggestion);
+    }
+
+    @Override
+    public SuggestionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = getLayoutInflater().inflate(R.layout.item,parent, false);
+        parent.setVisibility(View.VISIBLE);
+        return new SuggestionHolder(view);
+    }
+
+    @Override
+    public int getSingleViewHeight() {
+        return 60;
+    }
+}
+
 
 public class Fragment_news extends Fragment  {
 
@@ -60,17 +102,48 @@ public class Fragment_news extends Fragment  {
         mylist=new int[]{0,1,2,3,4};
         titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
         searchBar.setHint("Search...");
-        searchBar.setLastSuggestions(historylist);
+        LayoutInflater inflater=getLayoutInflater();
+        DefaultSuggestionsAdapter adapter=new DefaultSuggestionsAdapter(inflater);
+        adapter.setSuggestions(historylist);
+        searchBar.setCustomSuggestionAdapter(adapter);
 
+        searchBar.setSuggestionsClickListener(new SuggestionsAdapter.OnItemViewClickListener() {
+            @Override
+            public void OnItemClickListener(int position, View v) {
+                searchBar.setText(historylist.get(position));
+            }
+
+            @Override
+            public void OnItemDeleteListener(int position, View v) {
+                historylist.remove(position);
+                searchBar.updateLastSuggestions(historylist);
+            }
+        });
+        boolean a=searchBar.isSuggestionsVisible();
+        Log.d("Debug:","visible"+a);
         searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
+                if(enabled) {
+                    historylist = TableOperate.getInstance().getSearchHistory();
+                    Log.d("DEBUG", "size:" + historylist.size());
+                    searchBar.showSuggestionsList();
+                }
+                else
+                {
+                    searchBar.hideSuggestionsList();
+                }
 
             }
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
-
+                Intent intent=new Intent(getContext(),SearchActivity.class);
+                Bundle bund=new Bundle();
+                bund.putString("keyword",text.toString());
+                intent.putExtras(bund);
+                adapter.addSuggestion(text.toString());
+                startActivity(intent);
             }
 
             @Override

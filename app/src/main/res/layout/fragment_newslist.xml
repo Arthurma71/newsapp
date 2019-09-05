@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,22 +12,21 @@
         android:orientation="horizontal">
 
         <com.mancj.materialsearchbar.MaterialSearchBar
-            style="@style/MaterialSearchBarLight"
+            android:id="@+id/search"
 
-            app:mt_speechMode="true"
-            app:mt_hint="Custom hint"
-            app:mt_maxSuggestionsCount="10"
+            style="@style/MaterialSearchBarLight"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape"
             android:layout_margin="9dp"
             android:layout_weight="1"
-            android:background="@drawable/shape"
-            android:id="@+id/search" />
+            app:mt_hint="Custom hint"
+            app:mt_maxSuggestionsCount="10"
+            app:mt_speechMode="true" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@id/linear1"
         android:id="@+id/linear2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,9 +51,6 @@
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
-        android:layout_below="@id/linear2"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-</RelativeLayout>
+</LinearLayout>
