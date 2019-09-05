@@ -494,6 +494,30 @@ public class TableOperate {
         return newsList;
     }
 
+    public void updateSearchHistory(List<String> wordList){
+        searchHistory.clear();
+        for(int i = 0;i < wordList.size();i ++){
+            searchHistory.add(wordList.get(i));
+        }
+
+        File file = new File(savePath + File.separator + "config");
+        if(!file.exists())file.mkdirs();
+        File tabListFile = new File(savePath+File.separator+"config"+File.separator+"searchhistory.txt");
+        try {
+            tabListFile.createNewFile();
+            PrintStream printStreamSH = new PrintStream(savePath+File.separator+"config"+File.separator+"searchhistory.txt");
+
+            printStreamSH.println(searchHistory.size());
+            for(String a: searchHistory)
+            {
+                printStreamSH.println(a);
+            }
+            printStreamSH.close();
+        } catch (Exception e) {
+            Log.d("Save","FileSave fail!");
+        }
+    }
+
     public List<String> getSearchHistory()
     {
         return searchHistory;

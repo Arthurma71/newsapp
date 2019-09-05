@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.panjunchen.models.News;
+import com.example.panjunchen.models.TableConfig;
 import com.example.panjunchen.models.TableOperate;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -190,7 +191,7 @@ public class Section extends Fragment {
         db = TableOperate.getInstance();
         refresh = getView().findViewById(R.id.refresh);
         if(secname.equals("推荐")){
-            list = db.getRecommendFromServer(10);
+            list = new ArrayList<>();
         }
         else{
             list = db.getNewsFromLocal(secname, 10, 0);
