@@ -405,7 +405,11 @@ public class TableOperate {
         return temp;
     }
 
-    public List<News> getRecommend(int count,int index)
+    public List<News> getRecommendFromLocal(int count,int index){
+        return new ArrayList<>();
+    }
+
+    public List<News> getRecommendFromServer(int count,int index)
     {
         List<News> newsList = new ArrayList<>();
 
