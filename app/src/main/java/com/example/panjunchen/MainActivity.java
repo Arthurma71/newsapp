@@ -15,6 +15,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
     private Fragment_favs fragment_favs;
@@ -131,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         Log.d("DEBUG","FUCK!");
 
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        JCVideoPlayer.releaseAllVideos();
     }
 
 }

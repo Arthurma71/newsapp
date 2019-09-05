@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
 import static java.lang.Thread.sleep;
 
 class SingleItemClickListener extends RecyclerView.SimpleOnItemTouchListener   {
@@ -182,47 +184,49 @@ public class Section extends Fragment {
     }
 
     private void init() {
-        rv=getView().findViewById(R.id.newslist);
-        db=TableOperate.getInstance();
-        refresh=getView().findViewById(R.id.refresh);
-        list=db.getNewsFromLocal(secname,10,0);
-        if(list.size()==0)
-        {
-            list=db.getNewsFromServer(secname,10);
+        rv = getView().findViewById(R.id.newslist);
+        db = TableOperate.getInstance();
+        refresh = getView().findViewById(R.id.refresh);
+        list = db.getNewsFromLocal(secname, 10, 0);
+        if (list.size() == 0) {
+            list = db.getNewsFromServer(secname, 10);
         }
-        index=list.size();
-        adapter=new NewsAdapter(list,getContext());
+        index = list.size();
+        adapter = new NewsAdapter(list, getContext());
         rv.setAdapter(adapter);
-        rv.addOnItemTouchListener(new SingleItemClickListener(rv, new SingleItemClickListener.OnItemClickListener(){
+        rv.addOnItemTouchListener(new SingleItemClickListener(rv, new SingleItemClickListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent=new Intent(getContext(),ReadActivity.class);
+                Intent intent = new Intent(getContext(), ReadActivity.class);
                 try {
                     list.get(position).setReadtime(new Date());
-                    lastindex=list.get(position).getDBindex();
-                    lastchanged=position;
+                    lastindex = list.get(position).getDBindex();
+                    lastchanged = position;
                     TableOperate.getInstance().renewNews(list.get(position));
                     adapter.notifyDataSetChanged();
                     intent.putExtra("index", list.get(position).getDBindex());
+
                     startActivity(intent);
-                }
-                catch(IndexOutOfBoundsException e)
-                {
-                    Log.d("DEBUG:","out of bound:"+position+" "+list.size());
+                } catch (IndexOutOfBoundsException e) {
+                    Log.d("DEBUG:", "out of bound:" + position + " " + list.size());
                 }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                Log.d("DEBUG:","long click:"+position);
+                Log.d("DEBUG:", "long click:" + position);
             }
         }));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        rv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        JCVideoPlayer.releaseAllVideos();
+    }
     @Override
     public void onResume() {
         super.onResume();
