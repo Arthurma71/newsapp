@@ -2,6 +2,7 @@ package com.example.panjunchen;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,17 +39,51 @@ public class Fragment_favs extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("DEBUG:","fav_create_view");
         if(adapter!=null)
         {
+            list=TableOperate.getInstance().getFavorite(10,0);
+            index=list.size();
+            adapter.notifyDataSetChanged();
             rv.setAdapter(adapter);
         }
+
         View view=inflater.inflate(R.layout.fragment_favread,container,false);
         return view;
     }
+
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        init();
+        refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) {
+                List<News> k;
+                Log.d("DEBUG:","index:"+index);
+                k= TableOperate.getInstance().getFavorite( 10, index);
+                index = index + k.size();
+                for (int i = 0; i < k.size(); i++) {
+                    list.add(k.get(i));
+                }
+                adapter.notifyDataSetChanged();
+                refreshlayout.finishLoadMore();
+            }
+        });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("DEBUG:","fav_resume");
+        list=TableOperate.getInstance().getFavorite(10,0);
+        index=list.size();
+        adapter=new NewsAdapter(list,getContext());
+        rv.setAdapter(adapter);
+    }
+
 
 
     private void init() {
@@ -83,5 +120,6 @@ public class Fragment_favs extends Fragment {
         }));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        refresh.setEnableRefresh(false);
     }
 }

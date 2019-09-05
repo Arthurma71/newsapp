@@ -134,17 +134,17 @@ public class Section extends Fragment {
             public void onRefresh(final RefreshLayout refreshlayout) {
                 Log.d("DEBUG:","refresh:"+secname);
                 Handler mHandler=new Handler();
-                List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
-                for(int i=0;i<k.size();i++)
-                {
-                    list.add(0 ,k.get(i));
-                }
-                refreshlayout.finishRefresh(1000);
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
+                        for(int i=0;i<k.size();i++)
+                        {
+                            list.add(0 ,k.get(i));
+                        }
                         index=10;
                         adapter.notifyDataSetChanged();
+                        refreshlayout.finishRefresh(1000);
                     }
                 });
             }
@@ -157,7 +157,7 @@ public class Section extends Fragment {
 
                 if(secname=="推荐")
                 {
-                    k=TableOperate.getInstance().getRecommend(10,index);
+                    k=TableOperate.getInstance().getRecommendFromServer(10);
                 }
                 else
                 {

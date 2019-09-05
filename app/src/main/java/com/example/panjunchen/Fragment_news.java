@@ -11,6 +11,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,6 +20,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 
@@ -29,6 +32,8 @@ public class Fragment_news extends Fragment  {
     private TabLayout tabs;
     private ArrayList<Fragment> sectionpage;
     private Button b;
+    MaterialSearchBar searchBar;
+    private ListView historylist;
     private int[] mylist;
     public Fragment_news(){
         super();
@@ -42,6 +47,7 @@ public class Fragment_news extends Fragment  {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        searchBar=getActivity().findViewById(R.id.search);
         tabs=getActivity().findViewById(R.id.tabsview);
         vp=getActivity().findViewById(R.id.viewpager);
         b=getActivity().findViewById(R.id.button);
