@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.panjunchen.models.News;
+import com.example.panjunchen.models.TableConfig;
 import com.example.panjunchen.models.TableOperate;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -26,6 +27,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
 import static java.lang.Thread.sleep;
 
@@ -133,20 +136,22 @@ public class Section extends Fragment {
             @Override
             public void onRefresh(final RefreshLayout refreshlayout) {
                 Log.d("DEBUG:","refresh:"+secname);
-                Handler mHandler=new Handler();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        List<News> k=TableOperate.getInstance().getNewsFromServer(secname,10);
-                        for(int i=0;i<k.size();i++)
-                        {
-                            list.add(0 ,k.get(i));
-                        }
-                        index=10;
-                        adapter.notifyDataSetChanged();
-                        refreshlayout.finishRefresh(1000);
-                    }
-                });
+                List<News> k;
+                if(secname.equals("推荐"))
+                {
+                    k=TableOperate.getInstance().getRecommendFromServer(10);
+                }
+                else
+                {
+                    k= TableOperate.getInstance().getNewsFromServer(secname, 10);
+                }
+                for(int i=0;i<k.size();i++)
+                {
+                    list.add(0 ,k.get(i));
+                }
+                index=10;
+                adapter.notifyDataSetChanged();
+                refreshlayout.finishRefresh();
             }
         });
         refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -155,9 +160,9 @@ public class Section extends Fragment {
 
                 List<News> k;
 
-                if(secname=="推荐")
+                if(secname.equals("推荐"))
                 {
-                    k=TableOperate.getInstance().getRecommendFromServer(10);
+                    k=new ArrayList<>();
                 }
                 else
                 {
@@ -182,46 +187,66 @@ public class Section extends Fragment {
     }
 
     private void init() {
-        rv=getView().findViewById(R.id.newslist);
-        db=TableOperate.getInstance();
-        refresh=getView().findViewById(R.id.refresh);
-        list=db.getNewsFromLocal(secname,10,0);
-        if(list.size()==0)
-        {
-            list=db.getNewsFromServer(secname,10);
+        rv = getView().findViewById(R.id.newslist);
+        db = TableOperate.getInstance();
+        refresh = getView().findViewById(R.id.refresh);
+        if(secname.equals("推荐")){
+            list = new ArrayList<>();
         }
-        index=list.size();
-        adapter=new NewsAdapter(list,getContext());
+        else{
+            list = db.getNewsFromLocal(secname, 10, 0);
+            if (list.size() == 0) {
+                list = db.getNewsFromServer(secname, 10);
+            }
+        }
+        index = list.size();
+        adapter = new NewsAdapter(list, getContext());
         rv.setAdapter(adapter);
-        rv.addOnItemTouchListener(new SingleItemClickListener(rv, new SingleItemClickListener.OnItemClickListener(){
+        rv.addOnItemTouchListener(new SingleItemClickListener(rv, new SingleItemClickListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
-                Intent intent=new Intent(getContext(),ReadActivity.class);
+                Intent intent = new Intent(getContext(), ReadActivity.class);
                 try {
                     list.get(position).setReadtime(new Date());
-                    lastindex=list.get(position).getDBindex();
-                    lastchanged=position;
+                    lastindex = list.get(position).getDBindex();
+                    lastchanged = position;
                     TableOperate.getInstance().renewNews(list.get(position));
                     adapter.notifyDataSetChanged();
                     intent.putExtra("index", list.get(position).getDBindex());
+
                     startActivity(intent);
-                }
-                catch(IndexOutOfBoundsException e)
-                {
-                    Log.d("DEBUG:","out of bound:"+position+" "+list.size());
+                } catch (IndexOutOfBoundsException e) {
+                    Log.d("DEBUG:", "out of bound:" + position + " " + list.size());
                 }
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                Log.d("DEBUG:","long click:"+position);
+                Log.d("DEBUG:", "long click:" + position);
             }
         }));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.addItemDecoration(new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL));
+        rv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        JCVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden){
+        JCVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        JCVideoPlayer.releaseAllVideos();
+    }
 
     @Override
     public void onResume() {

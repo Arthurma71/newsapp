@@ -29,7 +29,9 @@ import com.mancj.materialsearchbar.adapter.DefaultSuggestionsAdapter;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.Inflater;
 
 import static android.content.Context.LAYOUT_INFLATER_SERVICE;
@@ -99,8 +101,8 @@ public class Fragment_news extends Fragment  {
         b=getActivity().findViewById(R.id.button);
         historylist= TableOperate.getInstance().getSearchHistory();
         sectionpage=new ArrayList<Fragment>();
-        mylist=new int[]{0,1,2,3,4};
-        titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车"};
+        mylist=TableOperate.getInstance().getTabList().stream().mapToInt(Integer::intValue).toArray();
+        titles=new String[]{"社会","财经","文化","教育","娱乐","体育","军事","健康","汽车","推荐"};
         searchBar.setHint("Search...");
         LayoutInflater inflater=getLayoutInflater();
         DefaultSuggestionsAdapter adapter=new DefaultSuggestionsAdapter(inflater);
@@ -209,9 +211,9 @@ public class Fragment_news extends Fragment  {
             if(resultCode==1){
                 Bundle bund=data.getExtras();
                 mylist=bund.getIntArray("mylist");
+                TableOperate.getInstance().renewTabList(Arrays.stream(mylist).boxed().collect(Collectors.toList()));
                 vp.getAdapter().notifyDataSetChanged();
                 tabs.setupWithViewPager(vp);
-
             }
         }
     }

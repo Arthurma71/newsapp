@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChangeActivity"></activity>
+        <activity android:name=".HistoryActivity"></activity>
+        <activity android:name=".ChangeActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -28,6 +29,7 @@
 
         <activity android:name="com.example.panjunchen.SearchActivity"
             android:parentActivityName="com.example.panjunchen.MainActivity"/>
+
         <activity
             android:name=".ReadActivity"
             android:parentActivityName=".MainActivity" />
