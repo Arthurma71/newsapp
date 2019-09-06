@@ -1,6 +1,7 @@
 package com.example.panjunchen;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,7 +80,9 @@ public class ReadActivity extends AppCompatActivity {
                     case R.id.action_share:
                     {
                         OnekeyShare oks = new OnekeyShare();
-                        oks.setTitle(news.getTitle());
+
+                        Log.d("Share",news.getPageURL());
+                        oks.setImageData(BitmapFactory.decodeResource(getResources(),R.drawable.icon));
                         oks.setText(news.getTitle());
                         oks.setUrl(news.getPageURL());
                         oks.show(getApplicationContext());
