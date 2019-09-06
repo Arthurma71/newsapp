@@ -37,7 +37,7 @@ public class AccountServerConnect implements Runnable {
     public void run()
     {
         try{
-            Socket socket=new Socket("192.168.0.107",4700);
+            Socket socket=new Socket("183.172.168.93",4700);
             PrintWriter os=new PrintWriter(socket.getOutputStream());
             BufferedReader is=new BufferedReader( new InputStreamReader(socket.getInputStream()));
             Log.d("AccountServer","Connection OK");

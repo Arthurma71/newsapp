@@ -105,6 +105,7 @@ public class Section extends Fragment {
     private int lastchanged=-1;
     private int lastindex=-1;
     private int index;
+    private Handler handler=new Handler();
     public Section(){
         super();
     }
@@ -129,6 +130,12 @@ public class Section extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
+
+        final Runnable mUpdate = new Runnable() {
+            public void run(){
+                adapter.notifyDataSetChanged();
+            }
+        };
         super.onActivityCreated(savedInstanceState);
         Log.d("DEBUG:","onActivityCreated:"+secname);
         init();
@@ -136,51 +143,51 @@ public class Section extends Fragment {
             @Override
             public void onRefresh(final RefreshLayout refreshlayout) {
                 Log.d("DEBUG:","refresh:"+secname);
-                List<News> k;
-                if(secname.equals("推荐"))
-                {
-                    k=TableOperate.getInstance().getRecommendFromServer(10);
-                }
-                else
-                {
-                    k= TableOperate.getInstance().getNewsFromServer(secname, 10);
-                }
-                for(int i=0;i<k.size();i++)
-                {
-                    list.add(0 ,k.get(i));
-                }
-                index=10;
-                adapter.notifyDataSetChanged();
-                refreshlayout.finishRefresh();
+                new Thread((Runnable)() ->{
+                    List<News> k;
+                    if(secname.equals("推荐"))
+                    {
+                        k=TableOperate.getInstance().getRecommendFromServer(10);
+                    }
+                    else
+                    {
+                        k= TableOperate.getInstance().getNewsFromServer(secname, 10);
+                    }
+                    for(int i=0;i<k.size();i++)
+                    {
+                        list.add(0 ,k.get(i));
+                    }
+                    index=10;
+                    handler.post(mUpdate);
+                    refreshlayout.finishRefresh();
+
+                }).start();
             }
         });
-        refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(RefreshLayout refreshlayout) {
+        refresh.setOnLoadMoreListener(refreshlayout -> {
 
-                List<News> k;
+            List<News> k;
 
-                if(secname.equals("推荐"))
-                {
-                    k=new ArrayList<>();
+            if(secname.equals("推荐"))
+            {
+                k=new ArrayList<>();
+            }
+            else
+            {
+                k= TableOperate.getInstance().getNewsFromLocal(secname, 10, index);
+            }
+            if(k.size()==0)
+            {
+                refreshlayout.finishLoadMoreWithNoMoreData();
+            }
+            else
+            {
+                index = index + k.size();
+                for (int i = 0; i < k.size(); i++) {
+                    list.add(k.get(i));
                 }
-                else
-                {
-                    k= TableOperate.getInstance().getNewsFromLocal(secname, 10, index);
-                }
-                if(k.size()==0)
-                {
-                    refreshlayout.finishLoadMoreWithNoMoreData();
-                }
-                else
-                {
-                    index = index + k.size();
-                    for (int i = 0; i < k.size(); i++) {
-                        list.add(k.get(i));
-                    }
-                    adapter.notifyDataSetChanged();
-                    refreshlayout.finishLoadMore();
-                }
+                adapter.notifyDataSetChanged();
+                refreshlayout.finishLoadMore();
             }
         });
 
@@ -190,15 +197,6 @@ public class Section extends Fragment {
         rv = getView().findViewById(R.id.newslist);
         db = TableOperate.getInstance();
         refresh = getView().findViewById(R.id.refresh);
-        if(secname.equals("推荐")){
-            list = new ArrayList<>();
-        }
-        else{
-            list = db.getNewsFromLocal(secname, 10, 0);
-            if (list.size() == 0) {
-                list = db.getNewsFromServer(secname, 10);
-            }
-        }
         index = list.size();
         adapter = new NewsAdapter(list, getContext());
         rv.setAdapter(adapter);
@@ -228,6 +226,39 @@ public class Section extends Fragment {
         }));
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+
+        final Runnable mUpdate = new Runnable() {
+            public void run(){
+                adapter.notifyDataSetChanged();
+            }
+        };
+
+        new Thread((Runnable)() ->{
+            List<News> k;
+            if(secname.equals("推荐")){
+                k = db.getRecommendFromServer(10);
+                for(int i=0;i<k.size();i++)
+                {
+                    list.add(k.get(i));
+                }
+            }
+            else{
+                k = db.getNewsFromLocal(secname, 10, 0);
+                for(int i=0;i<k.size();i++)
+                {
+                    list.add(k.get(i));
+                }
+                if (list.size() == 0) {
+                    k = db.getNewsFromServer(secname, 10);
+                    for(int i=0;i<k.size();i++)
+                    {
+                        list.add(k.get(i));
+                    }
+                }
+            }
+            handler.post(mUpdate);
+        }).start();
+
     }
 
     @Override
