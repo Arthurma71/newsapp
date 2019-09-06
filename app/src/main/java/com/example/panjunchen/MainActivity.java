@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.example.panjunchen.models.News;
 import com.example.panjunchen.models.TableOperate;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.mob.MobSDK;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         videocheck3.setTag(new ArrayList<>());
         videocheck3.setCategory("娱乐");
         if(!TableOperate.getInstance().isinDB(videocheck3.getHashcode()))TableOperate.getInstance().addNews(videocheck3);
+        MobSDK.init(getApplicationContext());
     }
 
     @Override
