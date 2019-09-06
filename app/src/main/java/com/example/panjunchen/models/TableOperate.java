@@ -314,6 +314,7 @@ public class TableOperate {
         cValue.put(TableConfig.News.NEWS_PUBLISH_TIME, news.getPublishtime().getTime());
         cValue.put(TableConfig.News.NEWS_PUBLISHER, news.getPublisher());
         cValue.put(TableConfig.News.NEWS_HASHCODE, news.getHashcode());
+        cValue.put(TableConfig.News.NEWS_URL,news.getPageURL());
         if(news.isIsfavorite()) cValue.put(TableConfig.News.NEWS_FAVORITE,1);
         else cValue.put(TableConfig.News.NEWS_FAVORITE,0);
         cValue.put(TableConfig.News.NEWS_CATEGORY,news.getCategory());
@@ -399,6 +400,7 @@ public class TableOperate {
             temp.setCategory(category);
             temp.setImageURL(stringToList(c.getString(9)));
             temp.setVideoURL(c.getString(10));
+            temp.setPageURL(c.getString(11));
             newsList.add(temp);
             count --;
         }
@@ -426,6 +428,7 @@ public class TableOperate {
             temp.setCategory(c.getString(8));
             temp.setImageURL(stringToList(c.getString(9)));
             temp.setVideoURL(c.getString(10));
+            temp.setPageURL(c.getString(11));
         }
         c.close();
         return temp;
@@ -487,6 +490,7 @@ public class TableOperate {
             temp.setCategory(c.getString(8));
             temp.setImageURL(stringToList(c.getString(9)));
             temp.setVideoURL(c.getString(10));
+            temp.setPageURL(c.getString(11));
             newsList.add(temp);
             count --;
         }
@@ -545,6 +549,7 @@ public class TableOperate {
             temp.setCategory(c.getString(8));
             temp.setImageURL(stringToList(c.getString(9)));
             temp.setVideoURL(c.getString(10));
+            temp.setPageURL(c.getString(11));
             newsList.add(temp);
             count --;
         }
@@ -628,6 +633,7 @@ public class TableOperate {
             temp.setCategory(c.getString(8));
             temp.setImageURL(stringToList(c.getString(9)));
             temp.setVideoURL(c.getString(10));
+            temp.setPageURL(c.getString(11));
             newsList.add(temp);
             count --;
         }

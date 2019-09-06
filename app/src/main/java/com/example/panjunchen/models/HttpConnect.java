@@ -76,6 +76,7 @@ public class HttpConnect implements Runnable
                     news.setPublishtime(df.parse(newsjson.getString("publishTime")));
                     news.setCategory(newsjson.getString("category"));
                     news.setVideoURL(newsjson.getString("video"));
+                    news.setPageURL(newsjson.getString("url"));
                     String a = newsjson.getString("image");
                     a = a.substring(1,a.length() - 1);
                     String[] ar = a.split(", ");

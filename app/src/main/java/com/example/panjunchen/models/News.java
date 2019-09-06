@@ -23,6 +23,7 @@ public class News {
     private String category;
     private List<String> imageURL;
     private String videoURL;
+    private String pageURL;
 
     public News()
     {
@@ -37,6 +38,15 @@ public class News {
         imageURL = new ArrayList<String>();
         videoURL = "MWC";
         tag.add("baigei");
+        pageURL = "www.baidu.com";
+    }
+
+    public void setPageURL(String pageURL) {
+        this.pageURL = pageURL;
+    }
+
+    public String getPageURL() {
+        return pageURL;
     }
 
     public void setImageURL(List<String> imageURL) {

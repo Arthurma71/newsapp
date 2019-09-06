@@ -23,6 +23,7 @@ public class TableConfig {
         public static final String NEWS_CATEGORY = "news_category";
         public static final String NEWS_IMAGE = "news_image";
         public static final String NEWS_VIDEO = "news_video";
+        public static final String NEWS_URL = "news_url";
     }
 
     public static class Tags {
