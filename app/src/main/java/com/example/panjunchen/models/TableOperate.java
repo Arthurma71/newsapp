@@ -602,7 +602,11 @@ public class TableOperate {
 
     public List<News> getNewsSearch(String keyword,int count,int index)
     {
-        if(!searchHistory.contains(keyword))searchHistory.add(keyword);
+        if(!searchHistory.contains(keyword))searchHistory.add(0,keyword);
+        else {
+            searchHistory.remove(keyword);
+            searchHistory.add(0,keyword);
+        }
 
         ArrayList<News> newsList = new ArrayList<>();
         String sql = "SELECT * FROM " + TableConfig.News.NEWS_TABLE_NAME + " WHERE " + TableConfig.News.NEWS_TITLE + " like '%" + keyword + "%'" +" ORDER BY " + TableConfig.News.NEWS_ID + " DESC";

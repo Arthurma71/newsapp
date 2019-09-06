@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 29
@@ -45,5 +46,20 @@ dependencies {
 
     implementation 'fm.jiecao:jiecaovideoplayer:5.5.4'
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
+
+}
+
+MobSDK {
+    appKey "2c419fe028a90"
+    appSecret "a581693c8403a504cadbf8e700fb16a8"
+
+    ShareSDK {
+        devInfo {
+            Wechat {
+                appId "wx60088dac91445143"
+                appSecret "bd4331624dd6d51e28acc7ea0abbc766"
+            }
+        }
+    }
 
 }
