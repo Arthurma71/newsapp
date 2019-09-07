@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:background="@color/colorWhite"
         app:srlEnablePreviewInEditMode="true">
 
         <androidx.recyclerview.widget.RecyclerView

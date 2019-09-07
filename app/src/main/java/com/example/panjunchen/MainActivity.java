@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_menu);
         initfragment();
         TableOperate.init(getApplicationContext());
@@ -154,5 +155,24 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle)
+    {
+        super.onSaveInstanceState(bundle);
+        bundle.putInt("last",lastfragment);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // 总是调用超类，以便它可以恢复视图层次超级
+        super.onRestoreInstanceState(savedInstanceState);
+        int newfragment=savedInstanceState.getInt("last");
+        Log.d("DEBUG","lastfrag:"+lastfragment);
+        Log.d("DEBUG","thisfrag:"+newfragment);
+        switchFragment(lastfragment,newfragment);
+        lastfragment=newfragment;
+    }
+
 
 }

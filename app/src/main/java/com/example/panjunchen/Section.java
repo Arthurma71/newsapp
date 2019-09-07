@@ -96,7 +96,7 @@ class SingleItemClickListener extends RecyclerView.SimpleOnItemTouchListener   {
 }
 
 public class Section extends Fragment {
-    private String secname="";
+    private String secname = "";
     private NewsAdapter adapter;
     private RecyclerView rv;
     private RefreshLayout refresh;
